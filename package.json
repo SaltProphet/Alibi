@@ -1,0 +1,9 @@
+{
+  "name": "line-please",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix voice-studio/frontend run dev --",
+    "build": "npm --prefix voice-studio/frontend run build",
+    "preview": "npm --prefix voice-studio/frontend run preview"
+  }
+}

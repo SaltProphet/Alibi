@@ -121,8 +121,12 @@ see the focused documents under the legacy implementation directory
 Frontend development runs from `voice-studio/frontend`:
 
 ```sh
+npm --prefix voice-studio/frontend ci
 npm run dev
 ```
+
+The root `npm run dev` command forwards to the frontend and accepts Vite
+options, for example `npm run dev -- --host 127.0.0.1`.
 
 Rebuild the tracked production frontend with:
 
