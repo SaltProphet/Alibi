@@ -2,7 +2,9 @@
 
 This document describes an earlier Visual-mode implementation. Visual mode is not part of the current shipped build; retain this file only as historical reference.
 
-The current frontend integrates the supplied AuraVoice reference with the existing local API. Fonts, Three.js, icons, and compiled assets are bundled locally. Fresh installations use the existing Setup-Voice-Studio.ps1 procedure; no cloud TTS key is required.
+This historical document describes an earlier AuraVoice reference integration.
+It is not part of the current Line Please interface. The current build uses
+the standard Line Please workspaces documented in the repository README.
 
 ## Workflow
 

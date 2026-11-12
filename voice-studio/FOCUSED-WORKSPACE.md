@@ -5,7 +5,7 @@
 Starting commit: `7fe85fc806a0264560123a7ea656fb016de18ae3`.
 Checkpoint tag: `checkpoint/before-focused-workspace-20261017`.
 
-The repository frontend was rebuilt and deployed to the separate running installation's frontend/dist. Its previous frontend is backed up under logs/deployments/focused-20261017-013108/dist in this repository checkout. Only static frontend files were deployed; no backend, model, private data, service, or sharing configuration was changed. Both source and deployment manifests were checked. Open http://127.0.0.1:8765/ and refresh; use the existing installation's Launch-Voice-Studio.cmd when stopped.
+The Line Please frontend was rebuilt and deployed to the separate running installation's frontend/dist. Its previous frontend is backed up under logs/deployments/focused-20261017-013108/dist in this repository checkout. Only static frontend files were deployed; no backend, model, private data, service, or sharing configuration was changed. Both source and deployment manifests were checked. Open http://127.0.0.1:8765/ and refresh; use the existing installation's launcher when stopped.
 
 Source work is saved on codex/immersive-voice-studio, without merging main. The unrelated output/ directory, local tests, model weights, logs, and personal data are not part of this change.
 

@@ -1,4 +1,4 @@
-# Voice Studio visual review
+# Historical: Line Please visual review
 
 Verified October 15, 2026 (America/New_York). Branch: `design/obsidian-acoustic-shell`.
 

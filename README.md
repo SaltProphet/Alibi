@@ -1,8 +1,12 @@
-# Voice Studio
+# Line Please
 
-Voice Studio is a local voice workspace for recording, voice references,
+Line Please is a local voice workspace for recording, voice references,
 Qwen3-TTS cloning, synthetic voice design, non-destructive audio cleanup,
 multitrack arrangement, and WAV export.
+
+The product is named **Line Please**. The `voice-studio/` directory and the
+`Voice-Studio` launcher filenames are retained as implementation paths for
+compatibility; they do not represent the product name.
 
 Everything runs on the host machine. The application does not require a paid
 API, cloud TTS key, Docker, or an account for normal local use.
@@ -109,7 +113,8 @@ to loopback by default.
 6. Position clips, adjust tracks, save the session, and export a mixed WAV.
 
 For implementation notes, helper setup, and historical verification records,
-see the focused documents under `voice-studio/`.
+see the focused documents under the legacy implementation directory
+`voice-studio/`.
 
 ## Development
 
