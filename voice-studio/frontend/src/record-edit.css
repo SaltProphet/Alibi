@@ -1,0 +1,79 @@
+/* Record & Edit screen from the new design (UI plan step 4). Uses tokens from tokens.css only. */
+.vs-head-actions { display: flex; align-items: center; gap: var(--vs-space-8); flex: none; flex-wrap: nowrap; justify-content: flex-end; }
+/* "Choose recording" opens the old drawer; with the Recordings panel on screen it is redundant, so it shows only when the panel is hidden */
+@media (min-width: 1101px) { .vs-head-actions .vs-only-narrow { display: none; } }
+.vs-head-actions .vs-btn { min-height: 33px; }
+.vs-head-actions label.vs-btn { margin: 0; flex-direction: row; cursor: pointer; }
+.vs-head-actions label.vs-btn input { display: none; }
+.vs-head-actions label.vs-btn.disabled { opacity: .45; pointer-events: none; }
+.vs-rec { display: inline-flex; align-items: center; gap: var(--vs-space-6); min-height: 33px; padding: 6px 14px; font-size: var(--vs-fs-control); }
+
+.vs-card { background: var(--vs-surface-1); border: 1px solid var(--vs-border); border-radius: var(--vs-radius-panel); padding: 16px 20px; margin-bottom: 18px; }
+.vs-card h2 { margin: 0; font-size: var(--vs-fs-section); font-weight: var(--vs-fw-semibold); color: var(--vs-text-1); }
+.vs-card label { margin: 0; }
+.vs-edit-empty p { margin: var(--vs-space-8) 0 0; color: var(--vs-text-2); font-size: var(--vs-fs-body); line-height: var(--vs-lh-body); }
+.vs-edit-empty .vs-hint { font-size: var(--vs-fs-meta); }
+
+/* Editor card */
+.vs-editor { display: flex; flex-direction: column; gap: var(--vs-space-12); }
+.vs-editor-head { display: flex; align-items: center; gap: var(--vs-space-10); flex-wrap: wrap; }
+.vs-editor-head h2 { max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-editor-head small { color: var(--vs-text-3); font-size: var(--vs-fs-meta); }
+.vs-badge.edited { background: var(--vs-accent-tint); color: var(--vs-accent); }
+.vs-editor-head a.vs-btn { text-decoration: none; }
+.vs-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--vs-radius-control); background: var(--vs-surface-2); }
+.vs-seg button { min-height: 0; padding: 4px 10px; border: 0; border-radius: var(--vs-radius-sm); background: transparent; color: var(--vs-text-2); font-size: var(--vs-fs-meta); font-weight: var(--vs-fw-medium); }
+.vs-seg button:hover:not(:disabled) { background: var(--vs-surface-3); border: 0; }
+.vs-seg button[aria-pressed=true] { background: var(--vs-surface-3); color: var(--vs-text-1); font-weight: var(--vs-fw-semibold); }
+.vs-wave-area { padding: 14px 12px 8px; border-radius: var(--vs-radius-item); background: var(--vs-surface-2); min-height: 140px; }
+.vs-wave-area.before { box-shadow: inset 0 0 0 1px var(--vs-border); }
+.vs-big-wave { min-height: 134px; }
+.vs-editor-controls, .vs-editor-foot, .vs-effects-head, .vs-effects-actions { display: flex; align-items: center; gap: var(--vs-space-8); flex-wrap: wrap; }
+.vs-editor-foot { padding-top: var(--vs-space-12); border-top: 1px solid var(--vs-border); }
+.vs-num { display: inline-flex; flex-direction: row; align-items: center; gap: var(--vs-space-8); color: var(--vs-text-2); font-size: var(--vs-fs-meta); }
+.vs-num input { width: 72px; padding: 5px 8px; border-radius: var(--vs-radius-sm); background: var(--vs-surface-2); border: 1px solid transparent; color: var(--vs-text-1); font-size: var(--vs-fs-control); font-weight: var(--vs-fw-medium); font-variant-numeric: tabular-nums; }
+.vs-num input:focus { border-color: var(--vs-accent-line); outline: none; }
+.vs-num i { font-style: normal; color: var(--vs-text-3); margin-left: -4px; }
+.vs-folder select { max-width: 200px; }
+.vs-danger-ghost { color: #ff8b8e; }
+.vs-danger-ghost:hover:not(:disabled) { border-color: #e5484d; background: #e5484d1f; }
+
+/* Effects card */
+.vs-effects { display: flex; flex-direction: column; gap: var(--vs-space-16); }
+.vs-effects-head .vs-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
+.vs-effects-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.vs-fx-col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.vs-fx-col h3 { margin: 0; color: var(--vs-text-3); font-size: var(--vs-fs-badge); font-weight: var(--vs-fw-bold); letter-spacing: var(--vs-ls-overline); }
+.vs-toggle { position: relative; display: flex; flex-direction: row; align-items: center; gap: var(--vs-space-10); color: var(--vs-text-1); font-size: var(--vs-fs-control); font-weight: var(--vs-fw-medium); cursor: pointer; }
+.vs-toggle input { position: absolute; opacity: 0; width: 30px; height: 18px; margin: 0; cursor: pointer; }
+.vs-toggle i { flex: none; position: relative; width: 30px; height: 18px; border-radius: var(--vs-radius-pill); background: var(--vs-surface-3); transition: background var(--studio-motion, 180ms); }
+.vs-toggle i::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--vs-text-2); transition: transform var(--studio-motion, 180ms), background var(--studio-motion, 180ms); }
+.vs-toggle input:checked + i { background: var(--vs-accent); }
+.vs-toggle input:checked + i::after { transform: translateX(12px); background: var(--vs-on-accent); }
+.vs-toggle input:focus-visible + i { outline: 2px solid var(--vs-accent); outline-offset: 2px; }
+.vs-toggle small { margin-left: auto; color: var(--vs-text-3); font-size: var(--vs-fs-meta); font-weight: var(--vs-fw-regular); }
+.vs-slider { display: flex; flex-direction: column; gap: var(--vs-space-8); }
+.vs-slider.dim { opacity: .55; }
+.vs-slider-top { display: flex; justify-content: space-between; color: var(--vs-text-2); font-size: var(--vs-fs-meta); font-weight: var(--vs-fw-medium); }
+.vs-slider-top b { color: var(--vs-text-1); font-weight: var(--vs-fw-medium); font-variant-numeric: tabular-nums; }
+.vs-slider input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 14px; padding: 0; margin: 0; border: 0; background: transparent; cursor: pointer; }
+.vs-slider input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--vs-accent) var(--fill), var(--vs-surface-3) var(--fill)); }
+.vs-slider input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; margin-top: -4px; border-radius: 50%; background: var(--vs-text-1); border: 0; }
+.vs-slider input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--vs-surface-3); }
+.vs-slider input[type=range]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--vs-accent); }
+.vs-slider input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--vs-text-1); border: 0; }
+.vs-slider input[type=range]:focus-visible { outline: 2px solid var(--vs-accent); outline-offset: 2px; }
+.vs-effects-actions { padding-top: var(--vs-space-16); border-top: 1px solid var(--vs-border); }
+.vs-btn[aria-pressed=true] { border-color: var(--vs-accent-line); color: var(--vs-text-1); }
+.vs-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: var(--vs-space-12); }
+.vs-comparison label { display: flex; flex-direction: column; gap: 6px; color: var(--vs-text-2); font-size: var(--vs-fs-meta); }
+.vs-comparison audio { width: 100%; height: 36px; }
+.vs-effects > .vs-hint { margin: -6px 0 0; }
+
+/* Existing "Save as a voice reference" card, toned to the new surfaces */
+.vs-app .panel.voice { border-radius: var(--vs-radius-panel); }
+
+@media (max-width: 900px) {
+  .vs-effects-grid { grid-template-columns: 1fr; gap: 18px; }
+  .vs-comparison { grid-template-columns: 1fr; }
+}

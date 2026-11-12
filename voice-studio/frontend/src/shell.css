@@ -1,0 +1,91 @@
+/* App shell from the new design (UI plan step 2). Uses tokens from tokens.css only. */
+body { background: var(--vs-bg-app); }
+body::before { display: none; }
+.vs-app { min-height: 100vh; display: grid; grid-template-columns: var(--vs-rail-width) minmax(0, 1fr); background: var(--vs-bg-app); color: var(--vs-text-1); font-family: var(--vs-font-sans); }
+.vs-app.with-panel { grid-template-columns: var(--vs-rail-width) minmax(0, 1fr) var(--vs-panel-width); }
+.vs-app button, .vs-app select, .vs-app input, .vs-app textarea { font-family: inherit; }
+
+/* Sidebar */
+.vs-side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; gap: var(--vs-space-6); padding: var(--vs-space-16) var(--vs-space-8); background: var(--vs-bg-rail); border-right: 1px solid var(--vs-border); z-index: 20; box-sizing: border-box; }
+.vs-logo { width: 40px; height: 40px; min-height: 40px; padding: 0; display: grid; place-items: center; border: 0; border-radius: 11px; background: var(--vs-accent); color: var(--vs-on-accent); margin-bottom: var(--vs-space-8); }
+.vs-logo:hover:not(:disabled) { background: var(--vs-accent-hover); border: 0; }
+.vs-side-links { display: flex; flex-direction: column; gap: var(--vs-space-6); width: 100%; }
+.vs-side-links button, .vs-settings { width: 100%; min-height: 55px; padding: 9px 2px; display: flex; flex-direction: column; align-items: center; gap: 5px; border: 0; border-radius: var(--vs-radius-item); background: transparent; color: var(--vs-text-2); font-size: var(--vs-fs-badge); font-weight: var(--vs-fw-medium); line-height: 1.1; text-align: center; white-space: normal; }
+.vs-side-links button:hover:not(:disabled) { background: var(--vs-surface-1); color: var(--vs-text-1); border: 0; }
+.vs-side-links button.active { background: var(--vs-accent-tint); color: var(--vs-text-1); font-weight: var(--vs-fw-semibold); }
+.vs-side-links button.active svg { color: var(--vs-accent); }
+.vs-side-foot { margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: var(--vs-space-6); }
+.vs-model { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: var(--vs-radius-item); background: var(--vs-surface-1); color: var(--vs-text-2); font-size: var(--vs-fs-overline); font-weight: var(--vs-fw-medium); }
+.vs-model-row { display: flex; align-items: center; gap: 4px; }
+.vs-model i { width: 7px; height: 7px; border-radius: 50%; background: var(--vs-text-3); }
+.vs-model b { font-weight: var(--vs-fw-semibold); color: var(--vs-text-2); }
+.vs-model.ready i { background: var(--vs-success); box-shadow: 0 0 8px #3ddc9780; }
+.vs-model.ready b { color: var(--vs-success); }
+.vs-model.offline i { background: #e5484d; }
+.vs-model.offline b { color: #ff8b8e; }
+.vs-settings-wrap { display: block; width: 100%; }
+.vs-settings:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Main column */
+.vs-app .vs-main { grid-column: 2; min-width: 0; max-width: none; margin: 0; padding: 40px 48px calc(var(--vs-player-height) + 24px); }
+.vs-app .vs-page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--vs-space-16); padding: 0; margin: 0 0 var(--vs-space-20); border: 0; }
+.vs-page-head h1 { margin: 0; font-size: var(--vs-fs-title); font-weight: var(--vs-fw-semibold); letter-spacing: -.3px; color: var(--vs-text-1); }
+.vs-page-head p { margin: 6px 0 0; font-size: var(--vs-fs-body); color: var(--vs-text-2); }
+.vs-pill { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--vs-radius-pill); background: var(--vs-surface-1); border: 1px solid var(--vs-border); color: var(--vs-text-2); font-size: var(--vs-fs-badge); font-weight: var(--vs-fw-medium); letter-spacing: .04em; }
+.vs-pill i { width: 6px; height: 6px; border-radius: 50%; background: var(--vs-success); }
+.vs-app .panel { background: var(--vs-surface-1); border: 1px solid var(--vs-border); border-radius: var(--vs-radius-card); box-shadow: none; }
+.vs-app .status { background: var(--vs-surface-1); border-color: var(--vs-border); color: var(--vs-text-2); }
+.vs-placeholder h2 { margin-bottom: var(--vs-space-8); }
+.vs-placeholder .row { gap: var(--vs-space-8); margin-top: var(--vs-space-12); }
+.vs-placeholder-list { margin: var(--vs-space-8) 0 0; padding-left: 18px; color: var(--vs-text-2); font-size: var(--vs-fs-control); line-height: 1.7; }
+
+/* Recordings panel */
+.vs-panel { grid-column: 3; position: sticky; top: 0; height: calc(100vh - var(--vs-player-height)); display: flex; flex-direction: column; gap: var(--vs-space-10); padding: 24px 16px 16px; background: var(--vs-bg-rail); border-left: 1px solid var(--vs-border); box-sizing: border-box; min-width: 0; }
+.vs-panel-head { display: flex; align-items: center; justify-content: space-between; }
+.vs-panel-head h2 { margin: 0; font-size: 15px; font-weight: var(--vs-fw-semibold); display: flex; align-items: center; gap: 8px; }
+.vs-count { padding: 2px 7px; border-radius: var(--vs-radius-pill); background: var(--vs-surface-3); color: var(--vs-text-2); font-size: var(--vs-fs-badge); font-weight: var(--vs-fw-medium); }
+.vs-panel-actions { display: flex; gap: var(--vs-space-6); }
+.vs-icon-btn { width: 32px; height: 30px; min-height: 30px; padding: 0; display: inline-grid; place-items: center; border: 1px solid var(--vs-border); border-radius: var(--vs-radius-control); background: var(--vs-surface-2); color: var(--vs-text-1); cursor: pointer; text-decoration: none; }
+.vs-icon-btn input { display: none; }
+.vs-icon-btn.disabled { opacity: .45; pointer-events: none; }
+.vs-search { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 0 10px; border: 1px solid var(--vs-border); border-radius: var(--vs-radius-control); background: var(--vs-surface-1); color: var(--vs-text-3); margin: 0; }
+.vs-search input { flex: 1; min-width: 0; border: 0; background: transparent; padding: 9px 0; font-size: var(--vs-fs-control); outline: none; }
+.vs-search:focus-within { border-color: var(--vs-accent-line); }
+.vs-filters { display: flex; gap: var(--vs-space-6); }
+.vs-filters select { min-width: 0; padding: 6px 10px; font-size: var(--vs-fs-control); background: var(--vs-surface-2); border-color: var(--vs-border); }
+.vs-asset-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--vs-space-8); padding-right: 2px; scrollbar-width: thin; scrollbar-color: var(--vs-surface-3) transparent; }
+.vs-asset { width: 100%; min-height: 56px; display: flex; align-items: center; gap: var(--vs-space-10); padding: 10px 12px; text-align: left; white-space: normal; background: var(--vs-surface-1); border: 1px solid var(--vs-border); border-radius: var(--vs-radius-item); color: var(--vs-text-1); }
+.vs-asset:hover:not(:disabled) { background: var(--vs-surface-2); border-color: var(--vs-border); }
+.vs-asset.selected { background: var(--vs-accent-tint); border-color: var(--vs-accent-line); }
+.vs-asset-play { flex: none; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--vs-surface-3); color: var(--vs-text-1); }
+.vs-asset.selected .vs-asset-play { background: var(--vs-accent); color: var(--vs-on-accent); }
+.vs-asset-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.vs-asset-text b { font-size: var(--vs-fs-control); font-weight: var(--vs-fw-semibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-asset-text small { font-size: var(--vs-fs-badge); color: var(--vs-text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-badge { flex: none; padding: 3px 8px; border-radius: var(--vs-radius-pill); background: var(--vs-surface-3); color: var(--vs-text-2); font-size: var(--vs-fs-badge); font-style: normal; font-weight: var(--vs-fw-medium); }
+.vs-badge.generated { background: var(--vs-accent-tint); color: var(--vs-accent); }
+.vs-empty { color: var(--vs-text-3); font-size: var(--vs-fs-control); padding: 8px 2px; }
+
+/* Bottom player */
+.vs-transport { position: fixed; z-index: 15; left: var(--vs-rail-width); right: 0; bottom: 0; height: var(--vs-player-height); display: flex; align-items: center; gap: var(--vs-space-16); padding: 0 20px; background: var(--vs-surface-1); border-top: 1px solid var(--vs-border); box-sizing: border-box; }
+.vs-play { flex: none; width: 40px; height: 40px; min-height: 40px; padding: 0; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--vs-accent); color: var(--vs-on-accent); }
+.vs-play:hover:not(:disabled) { background: var(--vs-accent-hover); border: 0; }
+.vs-now { width: 210px; min-width: 0; flex: none; display: flex; flex-direction: column; gap: 3px; }
+.vs-now b { font-size: 13px; font-weight: var(--vs-fw-semibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-now small { font-size: var(--vs-fs-meta); color: var(--vs-text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-time { flex: none; font-size: var(--vs-fs-meta); color: var(--vs-text-2); font-variant-numeric: tabular-nums; }
+.vs-wave { flex: 1; min-width: 80px; height: 34px; }
+.vs-wave-empty { display: block; height: 2px; margin-top: 16px; background: var(--vs-surface-3); border-radius: 1px; }
+.vs-btn { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 6px 12px; font-size: var(--vs-fs-control); font-weight: var(--vs-fw-medium); border: 1px solid var(--vs-border); background: var(--vs-surface-2); color: var(--vs-text-1); border-radius: var(--vs-radius-control); }
+.vs-btn-tint { background: var(--vs-accent-tint); border-color: transparent; color: var(--vs-accent); }
+.vs-btn-tint:hover:not(:disabled) { background: #ff6a3d38; border-color: transparent; }
+.vs-track { flex: none; display: flex; align-items: center; gap: 6px; margin: 0; padding: 0 0 0 10px; border: 1px solid var(--vs-border); border-radius: var(--vs-radius-control); background: var(--vs-surface-2); }
+.vs-track span { font-size: var(--vs-fs-meta); color: var(--vs-text-3); }
+.vs-track select { border: 0; background: transparent; padding: 6px 8px 6px 0; font-size: var(--vs-fs-control); }
+
+@media (max-width: 1100px) {
+  .vs-app.with-panel { grid-template-columns: var(--vs-rail-width) minmax(0, 1fr); }
+  .vs-panel { display: none; }
+  .vs-app .vs-main { padding: 28px 24px calc(var(--vs-player-height) + 20px); }
+  .vs-track, .vs-now { display: none; }
+}

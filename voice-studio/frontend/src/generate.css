@@ -1,0 +1,108 @@
+/* Generate screen from the new design (UI plan step 3). Uses tokens from tokens.css only. */
+.vs-gen { display: flex; flex-direction: column; gap: var(--vs-space-20); max-width: 1000px; }
+.vs-gen label { margin: 0; }
+.vs-grow { flex: 1; }
+
+/* Hero prompt card: the design's only shadow is the focus glow (#ff6a3d at 13%, blur 24) */
+.vs-prompt { display: flex; flex-direction: column; gap: 14px; padding: 18px 22px 16px; background: var(--vs-surface-1); border: 1px solid var(--vs-border); border-radius: 16px; transition: border-color var(--studio-motion, 180ms), box-shadow var(--studio-motion, 180ms); }
+.vs-prompt:focus-within { border-color: var(--vs-accent-line); box-shadow: 0 0 24px var(--vs-accent-glow); }
+.vs-prompt-top, .vs-prompt-bar { display: flex; align-items: center; gap: var(--vs-space-8); flex-wrap: wrap; }
+.vs-prompt-top { gap: var(--vs-space-10); }
+.vs-prompt-text { width: 100%; min-height: 56px; max-height: 40vh; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--vs-text-1); font-size: var(--vs-fs-prompt); line-height: 1.4; resize: none; field-sizing: content; caret-color: var(--vs-accent); }
+.vs-prompt-text::placeholder { color: var(--vs-text-3); }
+.vs-prompt-text:focus, .vs-prompt-text:focus-visible { outline: none; }
+.vs-prompt-rule { height: 1px; background: var(--vs-border); }
+
+/* Voice chip: the native select sits over the chip, so the real profile list is the dropdown */
+.vs-voice-chip { position: relative; display: inline-flex; flex-direction: row; align-items: center; gap: var(--vs-space-8); height: 34px; padding: 4px 12px 4px 5px; border-radius: var(--vs-radius-pill); background: var(--vs-surface-2); border: 1px solid transparent; color: var(--vs-text-2); cursor: pointer; max-width: 340px; }
+.vs-voice-chip:hover, .vs-voice-chip:focus-within { border-color: var(--vs-border); background: var(--vs-surface-3); }
+.vs-voice-chip:focus-within { outline: 2px solid var(--vs-accent); outline-offset: 2px; }
+.vs-avatar { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--vs-clip-3); color: var(--vs-accent); font-size: var(--vs-fs-meta); font-weight: var(--vs-fw-bold); }
+.vs-voice-text { display: flex; align-items: baseline; gap: var(--vs-space-8); min-width: 0; }
+.vs-voice-text b { color: var(--vs-text-1); font-size: var(--vs-fs-control); font-weight: var(--vs-fw-semibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-voice-text small { flex: none; color: var(--vs-text-3); font-size: var(--vs-fs-meta); }
+.vs-voice-chip select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; padding: 0; border: 0; }
+.vs-app .vs-gen option, .vs-app .vs-gen optgroup { background: var(--vs-surface-2); color: var(--vs-text-1); }
+.vs-link { min-height: 0; padding: 4px 6px; border: 0; background: transparent; color: var(--vs-text-2); font-size: var(--vs-fs-meta); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--vs-border); }
+.vs-link:hover:not(:disabled) { background: transparent; border: 0; color: var(--vs-text-1); }
+
+/* Conversation switch */
+.vs-switch { min-height: 0; display: inline-flex; align-items: center; gap: var(--vs-space-10); padding: 2px 4px; border: 0; background: transparent; color: var(--vs-text-2); font-size: var(--vs-fs-control); font-weight: var(--vs-fw-medium); }
+.vs-switch:hover:not(:disabled) { background: transparent; border: 0; color: var(--vs-text-1); }
+.vs-switch i { position: relative; width: 30px; height: 18px; border-radius: var(--vs-radius-pill); background: var(--vs-surface-3); transition: background var(--studio-motion, 180ms); }
+.vs-switch i::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--vs-text-2); transition: transform var(--studio-motion, 180ms), background var(--studio-motion, 180ms); }
+.vs-switch.on { color: var(--vs-text-1); }
+.vs-switch.on i { background: var(--vs-accent); }
+.vs-switch.on i::after { transform: translateX(12px); background: var(--vs-on-accent); }
+
+/* Dropdown-looking fields (Language, speaker) and the read-only Model label */
+.vs-drop { position: relative; display: inline-flex; flex-direction: row; align-items: center; gap: var(--vs-space-6); height: 28px; padding: 0 10px; border-radius: var(--vs-radius-control); background: var(--vs-surface-2); border: 1px solid transparent; color: var(--vs-text-2); }
+.vs-drop > span { color: var(--vs-text-3); font-size: var(--vs-fs-meta); }
+.vs-drop select { appearance: none; width: auto; min-width: 0; padding: 0 18px 0 0; margin-right: -18px; border: 0; background: transparent; color: var(--vs-text-1); font-size: var(--vs-fs-control); font-weight: var(--vs-fw-medium); cursor: pointer; position: relative; z-index: 1; }
+.vs-drop select:focus, .vs-drop select:focus-visible { outline: none; }
+.vs-drop:focus-within { outline: 2px solid var(--vs-accent); outline-offset: 2px; }
+.vs-drop:hover { border-color: var(--vs-border); }
+.vs-drop svg { flex: none; }
+.vs-readonly { cursor: default; background: transparent; border-color: var(--vs-border); }
+.vs-readonly:hover { border-color: var(--vs-border); }
+.vs-readonly b { color: var(--vs-text-1); font-size: var(--vs-fs-control); font-weight: var(--vs-fw-medium); }
+.vs-readonly.offline b { color: #ff8b8e; }
+.vs-readonly.checking b { color: var(--vs-text-2); }
+
+.vs-gen .vs-btn { min-height: 31px; }
+.vs-gen .vs-btn.vs-sm { min-height: 25px; padding: 4px 8px; font-size: var(--vs-fs-meta); }
+.vs-generate { display: inline-flex; align-items: center; gap: var(--vs-space-6); min-height: 31px; padding: 6px 16px; font-size: var(--vs-fs-control); }
+.vs-gen .vs-icon-btn { width: 29px; height: 27px; min-height: 27px; }
+
+.vs-hints { display: flex; flex-wrap: wrap; gap: var(--vs-space-6) var(--vs-space-12); margin: -6px 0 0; color: var(--vs-text-3); font-size: var(--vs-fs-meta); }
+
+/* Conversation */
+.vs-convo { display: flex; flex-direction: column; gap: var(--vs-space-16); padding-top: var(--vs-space-20); border-top: 1px solid var(--vs-border); }
+.vs-convo-head { display: flex; align-items: baseline; gap: var(--vs-space-10); flex-wrap: wrap; }
+.vs-convo-head b { color: var(--vs-accent); font-size: var(--vs-fs-badge); font-weight: var(--vs-fw-bold); letter-spacing: var(--vs-ls-overline); }
+.vs-convo-head span { color: var(--vs-text-2); font-size: var(--vs-fs-control); }
+.vs-blocks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--vs-space-8); }
+.vs-block { display: grid; grid-template-columns: 160px minmax(0, 1fr) auto; gap: var(--vs-space-10); align-items: start; padding: 10px 12px; background: var(--vs-surface-1); border: 1px solid var(--vs-border); border-radius: var(--vs-radius-item); }
+.vs-block:focus-within { border-color: var(--vs-accent-line); background: var(--vs-surface-2); }
+.vs-block-side { display: flex; flex-direction: column; gap: var(--vs-space-6); min-width: 0; }
+.vs-block-side small { color: var(--vs-text-3); font-size: var(--vs-fs-overline); font-weight: var(--vs-fw-bold); letter-spacing: var(--vs-ls-overline); }
+.vs-speaker { width: 100%; box-sizing: border-box; }
+.vs-speaker select { flex: 1; width: 100%; }
+.vs-block textarea { min-height: 44px; padding: 4px 0; border: 0; background: transparent; color: var(--vs-text-1); font-size: var(--vs-fs-body); line-height: var(--vs-lh-body); resize: none; field-sizing: content; }
+.vs-block textarea:focus, .vs-block textarea:focus-visible { outline: none; }
+.vs-block textarea::placeholder { color: var(--vs-text-3); }
+.vs-block-actions { display: flex; align-items: center; gap: var(--vs-space-6); }
+.vs-convo-foot { display: flex; align-items: center; gap: var(--vs-space-8); flex-wrap: wrap; }
+.vs-hint { color: var(--vs-text-3); font-size: var(--vs-fs-meta); }
+
+/* Secondary voice tools kept from the old screen (Design a voice) */
+.vs-gen .voice-design { margin: 0; padding: 12px 16px; background: var(--vs-surface-1); border: 1px solid var(--vs-border); border-radius: var(--vs-radius-card); }
+.vs-gen .voice-design summary { cursor: pointer; color: var(--vs-text-2); font-size: var(--vs-fs-control); font-weight: var(--vs-fw-medium); }
+.vs-gen .voice-design[open] summary { color: var(--vs-text-1); margin-bottom: var(--vs-space-8); }
+.vs-gen .voice-design label { display: flex; flex-direction: column; gap: 6px; margin: var(--vs-space-12) 0 var(--vs-space-8); color: var(--vs-text-2); font-size: var(--vs-fs-meta); }
+.vs-gen .voice-design textarea { background: var(--vs-bg-sunken); }
+.vs-gen .voice-design button { margin-right: var(--vs-space-8); }
+
+/* Header model pill */
+.vs-pill.vs-model-pill.ready i { background: var(--vs-success); }
+.vs-pill.vs-model-pill.idle i { background: var(--vs-text-2); }
+.vs-pill.vs-model-pill.checking i { background: var(--vs-text-3); }
+.vs-pill.vs-model-pill.offline i { background: #e5484d; }
+.vs-pills { display: flex; gap: var(--vs-space-6); flex-wrap: wrap; justify-content: flex-end; }
+
+/* Running-job card in the Recordings panel */
+.vs-job { display: flex; flex-direction: column; gap: var(--vs-space-8); padding: 10px 12px; border-radius: var(--vs-radius-item); background: var(--vs-accent-tint); border: 1px solid var(--vs-accent-line); }
+.vs-job-head { display: flex; align-items: center; gap: var(--vs-space-8); }
+.vs-job-head i { width: 7px; height: 7px; border-radius: 50%; background: var(--vs-accent); animation: vs-pulse 1.2s ease-in-out infinite; }
+.vs-job-head b { font-size: var(--vs-fs-control); font-weight: var(--vs-fw-semibold); }
+.vs-job small { color: var(--vs-text-2); font-size: var(--vs-fs-badge); }
+.vs-job-bar { height: 3px; border-radius: 2px; background: var(--vs-surface-3); overflow: hidden; }
+.vs-job-bar span { display: block; height: 100%; background: var(--vs-accent); transition: width .4s; }
+.vs-job .vs-btn { align-self: flex-start; }
+.vs-job .vs-btn.vs-sm { min-height: 25px; padding: 4px 8px; font-size: var(--vs-fs-meta); }
+@keyframes vs-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .vs-job-head i { animation: none; } }
+
+/* The status-line Stop button is only a fallback when the panel (and its job card) is hidden */
+@media (min-width: 1101px) { .vs-app.with-panel .vs-stop-fallback { display: none; } }
+@media (max-width: 700px) { .vs-block { grid-template-columns: 1fr; } }

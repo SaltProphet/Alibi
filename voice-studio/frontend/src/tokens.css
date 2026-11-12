@@ -1,0 +1,83 @@
+/* Design tokens decoded from "Voice Studio: New UI (first pass)" (Figma, 2026-10-21).
+   Step 1 of the UI update plan: tokens only, no layout changes.
+   Deviation from the design: --vs-text-3 is #7d838f instead of #5c626d so hint text
+   reaches 4.66:1 on --vs-surface-1 (#5c626d measured 2.89:1, below WCAG AA 4.5:1). */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+
+:root {
+  /* Surfaces */
+  --vs-bg-app: #0f1013;
+  --vs-bg-rail: #0a0b0d;
+  --vs-bg-sunken: #121317;
+  --vs-surface-1: #16181d;
+  --vs-surface-2: #1e2128;
+  --vs-surface-3: #262a32;
+  --vs-border: #2b2f38;
+
+  /* Text */
+  --vs-text-1: #eceef1;
+  --vs-text-2: #9097a3;
+  --vs-text-3: #7d838f;          /* design: #5c626d (raised for contrast) */
+  --vs-text-3-design: #5c626d;   /* kept for decorative, non-text use only */
+
+  /* Accent */
+  --vs-accent: #ff6a3d;
+  --vs-accent-hover: #ff8a63;
+  --vs-accent-tint: #ff6a3d24;   /* 14% */
+  --vs-accent-line: #ff6a3d66;   /* 40% */
+  --vs-accent-glow: #ff6a3d21;   /* 13%, prompt-card focus glow */
+  --vs-on-accent: #1a0b05;
+  --vs-success: #3ddc97;
+
+  /* Arrange clip palette (role partly uncertain in the decode) */
+  --vs-clip-1: #8a5a48;
+  --vs-clip-2: #6b4a3f;
+  --vs-clip-3: #3a2a24;
+  --vs-clip-4: #2a211e;
+  --vs-clip-line: #5a3a2e;
+
+  /* Type */
+  --vs-font-sans: 'Inter', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+  --vs-font-mono: Consolas, monospace;
+  --vs-fs-title: 26px;
+  --vs-fs-prompt: 18px;
+  --vs-fs-section: 14px;
+  --vs-fs-body: 13px;
+  --vs-fs-control: 12px;
+  --vs-fs-meta: 11px;
+  --vs-fs-badge: 10px;
+  --vs-fs-overline: 9px;
+  --vs-fw-regular: 400;
+  --vs-fw-medium: 500;
+  --vs-fw-semibold: 600;
+  --vs-fw-bold: 700;
+  --vs-lh-body: 1.5;
+  --vs-ls-overline: .08em;
+
+  /* Spacing scale */
+  --vs-space-2: 2px;
+  --vs-space-4: 4px;
+  --vs-space-6: 6px;
+  --vs-space-8: 8px;
+  --vs-space-10: 10px;
+  --vs-space-12: 12px;
+  --vs-space-16: 16px;
+  --vs-space-20: 20px;
+  --vs-space-24: 24px;
+
+  /* Radii */
+  --vs-radius-sm: 6px;
+  --vs-radius-control: 8px;
+  --vs-radius-item: 10px;
+  --vs-radius-card: 12px;
+  --vs-radius-panel: 14px;
+  --vs-radius-pill: 999px;
+
+  /* Layout (used from step 2 on) */
+  --vs-rail-width: 84px;
+  --vs-panel-width: 348px;
+  --vs-player-height: 76px;
+}

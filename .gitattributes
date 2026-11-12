@@ -1,0 +1,2 @@
+# Preserve the supplied visual reference byte-for-byte, including its original whitespace.
+voice-studio/frontend/src/immersive/reference.html -text whitespace=-blank-at-eol,cr-at-eol

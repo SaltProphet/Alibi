@@ -1,0 +1,20 @@
+{
+  "name": "voice-studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5178 --strictPort",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "lucide": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "wavesurfer.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}

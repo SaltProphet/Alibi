@@ -1,0 +1,10 @@
+{
+  "key": "finish",
+  "title": "4. Clean, arrange, export, and save",
+  "text": "Cleanup gives you noise reduction, normalization, a high pass filter, and fades. Applying an edit creates a new version, so your original stays safe. Add clips to the timeline, drag them into place, and adjust each track's volume or mute. Play mix lets you listen. Export mixed WAV saves the audio. Save session keeps your arrangement for later. And in the shared demo, invited guests share the files in that workspace.",
+  "generation": {
+    "seconds": 24.08,
+    "elapsed": 93.6364381313324,
+    "peak_gpu_gib": 4.644583702087402
+  }
+}

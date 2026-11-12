@@ -1,0 +1,5 @@
+# Optional CPU transcription. Preserve compatibility with the existing Qwen environment.
+faster-whisper==1.2.1
+av==15.1.0
+huggingface-hub>=0.34,<1
+tokenizers>=0.22,<=0.23.0

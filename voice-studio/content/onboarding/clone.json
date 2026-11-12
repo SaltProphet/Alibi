@@ -1,0 +1,10 @@
+{
+  "key": "clone",
+  "title": "3. Create a voice and generate dialogue",
+  "text": "Voice cloning is where recordings become reusable voices. Choose a clean reference, enter exactly what it says, name it, and save the voice profile. Select that profile, write something new in Dialogue, and press Generate speech. You can play, compare, and download the result.",
+  "generation": {
+    "seconds": 19.28,
+    "elapsed": 74.32849431037903,
+    "peak_gpu_gib": 4.643646717071533
+  }
+}

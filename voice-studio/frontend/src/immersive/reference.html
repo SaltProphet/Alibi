@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraVoice AI - Fluid Monochrome Acoustic Genome</title>
+  <!-- Tailwind CSS -->
+  
+  <!-- Lucide Icons -->
+  
+  <!-- Three.js for 3D Fluid Dynamics, Dust & DNA Helix -->
+  
+
+  <style>
+    400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --chroma-primary: #f8fafc;
+      --chroma-secondary: #94a3b8;
+      --chroma-glow: rgba(248, 250, 252, 0.25);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --panel-bg: rgba(6, 8, 13, 0.76);
+      --accent-tint: rgba(248, 250, 252, 0.06);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: #030407;
+      color: #e2e8f0;
+      overflow-x: hidden;
+      user-select: none;
+      transition: background-color 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .font-mono-code {
+      font-family: var(--font-mono);
+    }
+
+    /* Dynamic Archetype Glassmorphism */
+    .glass-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.94), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: border-color 0.8s ease, background 0.8s ease, box-shadow 0.8s ease;
+    }
+
+    .glass-panel-glow {
+      position: relative;
+    }
+    .glass-panel-glow::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, var(--panel-border), rgba(255, 255, 255, 0.02) 60%, transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      transition: background 0.8s ease;
+    }
+
+    /* Custom monochrome scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(3, 4, 7, 0.95);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    /* Ultra-slow abyssal breathing pulse */
+    @keyframes void-pulse {
+      0%, 100% { opacity: 0.14; transform: scale(1); filter: blur(140px); }
+      50% { opacity: 0.28; transform: scale(1.08); filter: blur(170px); }
+    }
+    .animate-void-pulse {
+      animation: void-pulse 18s infinite ease-in-out;
+    }
+
+    /* Minimalist tactile sliders with dynamic reactive thumb */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      height: 4px;
+      outline: none;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: background 0.2s;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--chroma-primary);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--chroma-glow), 0 0 2px #000;
+      transition: transform 0.2s ease, background-color 0.6s ease, box-shadow 0.6s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.3);
+      box-shadow: 0 0 16px var(--chroma-glow), 0 0 4px #000;
+    }
+
+    #bg-webgl-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: auto;
+    }
+
+    /* HUD toggle transition states */
+    .hud-layer {
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+    }
+    .hud-hidden {
+      opacity: 0 !important;
+      transform: scale(0.97) translateY(8px);
+      pointer-events: none !important;
+      filter: blur(8px);
+    }
+
+    /* Floating restore trigger button */
+    #zen-restore-btn {
+      transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+    }
+
+    /* Timeline & Extraction Animations */
+    .timeline-track-enter {
+      animation: trackIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes trackIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .extract-pulse {
+      animation: extPulse 1.2s infinite;
+    }
+    @keyframes extPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2); }
+      50% { box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0); }
+    }
+  </style>
+</head>
+<body class="h-screen h-[100dvh] relative overflow-hidden bg-[#030407] text-slate-200 flex flex-col justify-between selection:bg-white/20 selection:text-white">
+
+  <!-- 3D Background Canvas (Monochrome Helix + Fluid & Dust Particle Fields) -->
+  <canvas id="bg-webgl-canvas"></canvas>
+
+  <!-- Deep Obsidian Fog & Atmospheric Depth Gradients (Dynamically reactive to archetype) -->
+  <div class="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
+    <div id="glow-orb-1" class="absolute -top-40 -left-40 w-[38rem] h-[38rem] bg-white/[0.04] rounded-full blur-[160px] animate-void-pulse transition-all duration-1000"></div>
+    <div id="glow-orb-2" class="absolute top-1/3 -right-40 w-[42rem] h-[42rem] bg-white/[0.02] rounded-full blur-[190px] animate-void-pulse transition-all duration-1000" style="animation-delay: -6s;"></div>
+    <div id="glow-orb-3" class="absolute -bottom-32 left-1/4 w-[48rem] h-96 bg-white/[0.02] rounded-full blur-[170px] animate-void-pulse transition-all duration-1000" style="animation-delay: -11s;"></div>
+    
+    <!-- Micro fine-pitch grid overlay -->
+    <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_85%)] opacity-70"></div>
+  </div>
+
+  <!-- Persistent Floating Trigger to Restore HUD when in Zen Mode -->
+  <div id="zen-restore-container" class="fixed top-5 right-6 z-50 pointer-events-auto opacity-0 translate-y-[-10px] pointer-events-none transition-all duration-500">
+    <button id="zen-restore-btn" class="px-3.5 py-2 rounded-xl text-xs font-mono font-medium glass-panel flex items-center gap-2 hover:bg-white/10 text-zinc-300 hover:text-white shadow-2xl hover:scale-105 active:scale-95 transition-all">
+      <i data-lucide="eye" class="w-4 h-4 text-white"></i>
+      <span>Show Interface <span class="text-zinc-500 text-[10px]">[Space]</span></span>
+    </button>
+  </div>
+
+  <!-- Header Bar -->
+  <header id="main-header" class="hud-layer relative z-10 w-full px-6 py-3.5 flex items-center justify-between border-b glass-panel">
+    <div class="flex items-center gap-4">
+      <div id="logo-icon-box" class="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-tr from-white/20 via-zinc-400/10 to-transparent p-[1px] shadow-lg shadow-black/80 transition-all duration-700">
+        <div class="w-full h-full bg-[#07090e] rounded-[10px] flex items-center justify-center">
+          <i data-lucide="dna" id="header-dna-icon" class="w-5 h-5 text-zinc-200 animate-spin transition-colors duration-700" style="animation-duration: 38s;"></i>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-lg md:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            AuraVoice <span id="mode-badge" class="text-[10px] px-2.5 py-0.5 rounded-full font-mono font-medium tracking-wide bg-white/5 text-zinc-200 border border-white/10 transition-all duration-700">MONOCHROME ACOUSTIC</span>
+          </h1>
+        </div>
+        <p class="text-xs text-zinc-400 flex items-center gap-2">
+          <span>Dark-Field Dynamic Timbre Matrix</span>
+          <span id="tone-status-dot" class="inline-block w-1.5 h-1.5 rounded-full bg-zinc-300 shadow-[0_0_8px_rgba(255,255,255,0.7)] transition-all duration-500"></span>
+          <span id="tone-status-text" class="text-zinc-400 font-mono text-[10px] tracking-wide">IDLE HARMONICS</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Badges & Particle Control Switch -->
+    <div class="flex items-center gap-2.5">
+      <!-- Live Microphone Detector Toggle -->
+      <button id="toggle-mic-btn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-950/70 hover:bg-zinc-800/80 border border-white/10 text-zinc-300 hover:text-white transition-all flex items-center gap-2 shadow-sm">
+        <i data-lucide="mic" id="mic-icon" class="w-3.5 h-3.5 text-zinc-400 transition-colors"></i>
+        <span class="hidden sm:inline">Mic:</span> <span id="mic-status-label" class="text-zinc-400 font-mono">OFF</span>
+      </button>
+
+      <!-- Active Archetype Tone Palette Indicator -->
+      <div class="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-zinc-950/70 border border-white/10 shadow-inner">
+        <div class="flex flex-col text-right">
+          <span class="text-[9px] text-zinc-500 font-mono uppercase tracking-wider">Timbre Tone</span>
+          <span class="text-xs font-semibold text-zinc-200 font-mono-code flex items-center gap-1.5 justify-end" id="timbre-palette-name">
+            <span id="timbre-color-pip" class="w-2 h-2 rounded-full bg-slate-200 shadow-[0_0_8px_rgba(255,255,255,0.7)] transition-all duration-700"></span>
+            Platinum White
+          </span>
+        </div>
+      </div>
+
+      <!-- Helix & Fluid Motion Mode Toggle -->
+      <button id="toggle-helix-btn" class="hidden sm:flex px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-950/70 hover:bg-zinc-800/80 border border-white/10 text-zinc-300 hover:text-white transition-all items-center gap-2 shadow-sm">
+        <i data-lucide="layers" class="w-3.5 h-3.5 text-zinc-400"></i>
+        <span><span id="helix-mode-label" class="text-zinc-300 font-mono">Helix + Vortex</span></span>
+      </button>
+
+      <!-- Zen Watch Mode: Hide UI to just view the visuals -->
+      <button id="zen-toggle-btn" title="Toggle Zen View (Hide menus) [Press Space or H]" class="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center gap-2 shadow-[0_0_15px_rgba(255,255,255,0.08)] transition-all">
+        <i data-lucide="eye-off" class="w-3.5 h-3.5"></i>
+        <span class="hidden lg:inline">Zen View</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-content" class="hud-layer relative z-10 flex-1 w-full max-w-7xl mx-auto px-4 py-3 md:py-4 flex flex-col gap-4 overflow-y-auto">
+    
+    <!-- Top Row: Voice Archetypes & Multi-Mode Audio Oscilloscope Centerpiece -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+      
+      <!-- Left Panel: Biometric Archetype Personas -->
+      <div class="lg:col-span-4 flex flex-col gap-3">
+        <div class="glass-panel glass-panel-glow rounded-2xl p-4 flex flex-col justify-between h-full">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="fingerprint" id="archetype-icon" class="w-4 h-4 text-zinc-300 transition-colors duration-700"></i>
+                <h2 class="text-xs font-semibold tracking-wider uppercase text-zinc-300">Voice Archetypes</h2>
+              </div>
+              <span id="archetype-count-badge" class="text-[10px] font-mono bg-zinc-950/80 text-zinc-300 border border-white/10 px-2 py-0.5 rounded transition-all duration-700">4 PROFILES</span>
+            </div>
+
+            <!-- Voice List with Tone/Timbre nuances -->
+            <div class="space-y-2" id="voice-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Biometric DNA stats footer -->
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400 font-mono">
+            <span class="flex items-center gap-1.5">
+              <span id="formant-dot" class="w-2 h-2 rounded-full bg-zinc-300 shadow-[0_0_6px_rgba(255,255,255,0.7)] transition-all duration-700"></span> Timbre Shift: <span id="stat-formant" class="text-zinc-200">0.0 st</span>
+            </span>
+            <span class="text-zinc-500">Fluid Motes: 10,800</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center & Right Panel: Dynamic Monochrome Oscilloscope & Visualizer -->
+      <div class="lg:col-span-8 flex flex-col gap-3">
+        <div class="glass-panel glass-panel-glow rounded-2xl p-5 flex flex-col justify-between h-full relative overflow-hidden" id="scope-card">
+          
+          <!-- Waveform display header -->
+          <div class="flex flex-wrap items-center justify-between gap-2 z-10">
+            <div class="flex items-center gap-3">
+              <span class="flex h-3 w-3 relative">
+                <span id="recording-pulse" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75 hidden"></span>
+                <span id="status-indicator" class="relative inline-flex rounded-full h-3 w-3 bg-zinc-300 shadow-[0_0_10px_rgba(255,255,255,0.8)] transition-all duration-700"></span>
+              </span>
+              <h2 class="text-xs font-semibold tracking-wider text-zinc-200 uppercase flex items-center gap-2">
+                Fluid Harmonic Resonator & Oscilloscope
+                <span id="synthesis-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-white/10 transition-all duration-700">IDLE</span>
+              </h2>
+            </div>
+            
+            <!-- Visualizer Mode Selectors -->
+            <div class="flex items-center bg-zinc-950/80 p-1 rounded-lg border border-white/10 text-xs">
+              <button id="view-mode-combined" class="px-2.5 py-1 rounded bg-white/10 text-white font-medium transition-all shadow-[0_0_8px_rgba(255,255,255,0.15)]">Fluid Curves</button>
+              <button id="view-mode-freq" class="px-2.5 py-1 rounded text-zinc-400 hover:text-white transition-all">Spectrogram</button>
+              <button id="view-mode-dna" class="px-2.5 py-1 rounded text-zinc-400 hover:text-white transition-all">Helix Density</button>
+            </div>
+          </div>
+
+          <!-- Canvas for 2D Audio Waveform & Multi-sine Oscillations -->
+          <div class="w-full h-36 sm:h-44 my-2 relative rounded-xl overflow-hidden bg-black/85 border border-white/10 shadow-[inset_0_0_35px_rgba(0,0,0,0.95)]">
+            <canvas id="waveform-canvas" class="w-full h-full block"></canvas>
+            
+            <!-- Realtime frequency crosshairs info -->
+            <div class="absolute top-2 left-3 font-mono text-[10px] text-zinc-400/90 space-y-0.5 pointer-events-none">
+              <div>PCM MATRIX: 48.0 kHz / 24-bit Floating Obsidian Vector</div>
+              <div>SPECTRAL ENVELOPE: <span id="hud-envelope" class="text-white">HARMONIC VORTEX</span></div>
+            </div>
+
+            <!-- Pitch Grid overlay marks -->
+            <div class="absolute right-3 bottom-2 font-mono text-[10px] text-zinc-500 pointer-events-none text-right">
+              <div>TIMBRE FLUX: <span id="hud-flux" class="text-zinc-200 font-medium">0.820x</span></div>
+              <div id="hud-freq-label" class="text-zinc-400">Carrier: 440.00 Hz</div>
+            </div>
+          </div>
+
+          <!-- Realtime Audio & Fluid Controls Bar -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 border-t border-white/5">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-zinc-400">Base Pitch</span>
+                <span id="val-pitch" class="font-mono text-zinc-200">1.00x</span>
+              </div>
+              <input type="range" id="param-pitch" min="0.5" max="2.0" step="0.01" value="1.0" class="w-full">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-zinc-400">Timbre Color</span>
+                <span id="val-timbre" class="font-mono text-zinc-200">Neutral</span>
+              </div>
+              <input type="range" id="param-timbre" min="0" max="100" step="1" value="50" class="w-full">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-zinc-400">Vibrato Flux</span>
+                <span id="val-vibrato" class="font-mono text-zinc-200">0%</span>
+              </div>
+              <input type="range" id="param-vibrato" min="0" max="100" step="1" value="0" class="w-full">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-zinc-400">Fluid Curl Force</span>
+                <span id="val-drift" class="font-mono text-zinc-200">0.75x</span>
+              </div>
+              <input type="range" id="param-drift" min="0.1" max="3.0" step="0.1" value="0.75" class="w-full">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Lower Workstation: Multi-Track Timeline & Voice Reference -->
+    <div class="glass-panel glass-panel-glow rounded-2xl p-5 flex flex-col gap-4">
+      
+      <!-- Studio Tabs -->
+      <div class="flex items-center justify-between border-b border-white/5 pb-2">
+        <div class="flex items-center gap-6">
+          <button id="tab-timeline" class="text-xs font-semibold text-white border-b-2 border-white pb-2 px-1 tracking-wider uppercase">Neural Timeline</button>
+          <button id="tab-clone" class="text-xs font-semibold text-zinc-500 hover:text-zinc-300 pb-2 px-1 tracking-wider uppercase transition-colors">Voice Reference</button>
+        </div>
+        <div class="flex items-center gap-2">
+           <button id="export-audio-btn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-white/10 flex items-center gap-2 transition-all shadow-sm">
+             <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Track
+           </button>
+           <button id="synthesize-btn" class="px-5 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-zinc-200 text-black shadow-[0_0_15px_rgba(255,255,255,0.2)] flex items-center gap-2 transition-all">
+             <i data-lucide="play-circle" class="w-4 h-4" id="synth-btn-icon"></i> <span id="synth-btn-text">Synthesize Sequence</span>
+           </button>
+        </div>
+      </div>
+
+      <!-- Tab Content: Timeline Sequencer -->
+      <div id="view-timeline" class="flex flex-col gap-3 relative">
+        <div class="text-[10px] text-zinc-500 font-mono uppercase tracking-widest flex items-center justify-between">
+          <span>Sequencer Tracks</span>
+          <span id="seq-time-est">Multi-Archetype Queued</span>
+        </div>
+        
+        <!-- Dynamic Track List -->
+        <div id="timeline-container" class="space-y-2 max-h-32 sm:max-h-40 overflow-y-auto pr-2">
+          <!-- Tracks injected via JS -->
+        </div>
+
+        <button id="add-track-btn" class="w-full py-2 rounded-xl border border-dashed border-white/10 hover:border-white/30 text-zinc-500 hover:text-zinc-300 text-xs font-medium transition-all flex items-center justify-center gap-2 bg-white/[0.01] hover:bg-white/[0.04]">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Sequence Block
+        </button>
+      </div>
+
+      <!-- Tab Content: Voice Reference (Drag & Drop) -->
+      <div id="view-clone" class="hidden flex-col gap-3">
+        <div class="text-[10px] text-zinc-500 font-mono uppercase tracking-widest mb-1">Upload Source Audio</div>
+        <div id="audio-dropzone" class="border-2 border-dashed border-white/10 rounded-xl p-6 flex flex-col items-center justify-center text-zinc-400 bg-zinc-950/40 hover:bg-white/5 hover:border-white/30 transition-all cursor-pointer relative overflow-hidden group">
+          <div id="dropzone-glow" class="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+          <i data-lucide="fingerprint" id="drop-icon" class="w-8 h-8 mb-3 text-zinc-500 group-hover:text-white transition-colors"></i>
+          <p class="text-sm font-medium text-zinc-300 mb-1">Drag & Drop Audio File</p>
+          <p class="text-[10px] text-zinc-500">Import WAV, MP3, or FLAC, then enter its exact transcript.</p>
+        </div>
+      </div>
+
+      <!-- Live synthesis progress & interactive visual scrub bar -->
+      <div id="playback-bar-container" class="mt-2 pt-3 border-t border-white/5 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button id="stop-btn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.1)] opacity-50 hover:opacity-100">
+            <i data-lucide="square" class="w-3.5 h-3.5 fill-current"></i>
+          </button>
+          <div class="text-xs font-mono text-zinc-400 w-24">
+            <span id="current-time">00:00</span> / <span id="total-time">00:00</span>
+          </div>
+        </div>
+
+        <!-- Custom monochrome progress line -->
+        <div class="flex-1 relative h-2 bg-zinc-950 rounded-full cursor-pointer overflow-hidden border border-white/10 group" id="progress-container">
+          <div id="progress-fill" class="h-full bg-gradient-to-r from-zinc-500 via-zinc-200 to-white w-0 relative transition-all duration-75">
+            <div id="progress-scrub-glow" class="absolute right-0 top-0 bottom-0 w-2.5 bg-white shadow-[0_0_10px_#fff]"></div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs font-mono text-zinc-300">
+          <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+          <span id="bitrate-tag" class="w-20 text-right">Neural TTS</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer Status Bar -->
+  <footer id="main-footer" class="hud-layer relative z-10 w-full px-6 py-2.5 border-t border-white/5 glass-panel text-[11px] text-zinc-500 flex flex-wrap items-center justify-between gap-4 font-mono">
+    <div class="flex items-center gap-4">
+      <span class="flex items-center gap-1.5 text-zinc-400">
+        <span id="footer-dot-1" class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)] transition-all duration-700"></span> 
+        Fluid Particles: <span class="text-zinc-200">10,800 Dynamic Nodes</span>
+      </span>
+      <span class="hidden sm:inline-block text-zinc-800">|</span>
+      <span class="flex items-center gap-1.5 text-zinc-400">
+        <span id="footer-dot-2" class="w-1.5 h-1.5 rounded-full bg-zinc-400 shadow-[0_0_6px_rgba(200,200,200,0.6)] transition-all duration-700"></span>
+        Cosmic Motes: <span class="text-zinc-300">Atmospheric Drift</span>
+      </span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-zinc-400 hidden md:inline">Tip: Press <kbd class="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/10 text-zinc-200">Space</kbd> or <kbd class="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/10 text-zinc-200">H</kbd> to toggle Zen View</span>
+      <span class="text-zinc-800 hidden md:inline">•</span>
+      <span class="text-zinc-400">AuraVoice Dark Monochrome</span>
+    </div>
+  </footer>
+  
+  <!-- Notification Toast -->
+  <div id="toast-alert" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="glass-panel border-white/20 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm text-zinc-200">
+      <i data-lucide="check-circle-2" class="w-4 h-4 text-white"></i>
+      <span id="toast-message">Synthesizer calibrated.</span>
+    </div>
+  </div>
+
+  
+</body>
+</html>

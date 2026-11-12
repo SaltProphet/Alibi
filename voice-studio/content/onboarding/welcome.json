@@ -1,0 +1,10 @@
+{
+  "key": "welcome",
+  "title": "Welcome to your studio",
+  "text": "Welcome to Voice Studio. Let's take a quick look around. You can record your voice, create new dialogue, clean up audio, and bring it all together in a mix. The demo clips are there to explore whenever you're ready.",
+  "generation": {
+    "seconds": 11.68,
+    "elapsed": 47.71813488006592,
+    "peak_gpu_gib": 4.478765964508057
+  }
+}

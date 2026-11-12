@@ -1,0 +1,66 @@
+/* Voices screen from the new design (UI plan step 5). Uses tokens from tokens.css only. */
+.vs-voices { display: flex; flex-direction: column; gap: var(--vs-space-20); }
+.vs-voices label { margin: 0; }
+.vs-voices-bar { display: flex; align-items: center; gap: var(--vs-space-12); flex-wrap: wrap; }
+.vs-tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--vs-radius-item); background: var(--vs-surface-1); border: 1px solid var(--vs-border); }
+.vs-tabs button { min-height: 0; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 0; border-radius: 7px; background: transparent; color: var(--vs-text-2); font-size: var(--vs-fs-control); font-weight: var(--vs-fw-medium); }
+.vs-tabs button:hover:not(:disabled) { background: var(--vs-surface-2); border: 0; color: var(--vs-text-1); }
+.vs-tabs button.on { background: var(--vs-surface-3); color: var(--vs-text-1); font-weight: var(--vs-fw-semibold); }
+.vs-tabs small { color: var(--vs-text-3); font-size: var(--vs-fs-meta); font-weight: var(--vs-fw-regular); }
+.vs-voices-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--vs-space-24); align-items: start; }
+.vs-voices-form { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.vs-voices-form .vs-card, .vs-voices-side .vs-card, .vs-voices-saved .vs-card { margin: 0; }
+.vs-step { display: flex; flex-direction: column; gap: var(--vs-space-12); border-radius: var(--vs-radius-card); padding: 16px 18px; }
+.vs-step-head { display: flex; align-items: center; gap: var(--vs-space-10); }
+.vs-step-head small { color: var(--vs-text-3); font-size: var(--vs-fs-meta); }
+.vs-step-n { flex: none; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--vs-accent-tint); color: var(--vs-accent); font-size: var(--vs-fs-meta); font-weight: var(--vs-fw-bold); }
+.vs-ref-row, .vs-ref-actions, .vs-save-row { display: flex; align-items: center; gap: var(--vs-space-8); flex-wrap: wrap; }
+.vs-ref-row label.vs-btn { margin: 0; flex-direction: row; cursor: pointer; min-height: 31px; }
+.vs-ref-row label.vs-btn input { display: none; }
+.vs-ref-row label.vs-btn.disabled { opacity: .45; pointer-events: none; }
+.vs-ref-pick { flex: 1; min-width: 220px; height: 31px; }
+.vs-ref-pick select { flex: 1; width: 100%; }
+.vs-ref-wave { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: var(--vs-radius-control); background: var(--vs-surface-2); }
+.vs-ref-wave-canvas { min-height: 72px; }
+.vs-ref-trim { display: flex; align-items: center; justify-content: space-between; gap: var(--vs-space-8); }
+.vs-ref-trim .vs-num input { background: var(--vs-surface-1); }
+.vs-ref-wave .vs-ref-actions { padding-top: 4px; }
+.vs-warn { color: #e8b26a; }
+.vs-empty-ref { margin: 0; padding: 18px 12px; border-radius: var(--vs-radius-control); background: var(--vs-surface-2); color: var(--vs-text-3); font-size: var(--vs-fs-meta); text-align: center; }
+.vs-error-inline { margin: 0; padding: 8px 10px; border-radius: var(--vs-radius-control); background: #e5484d1f; border: 1px solid #e5484d66; color: #ffb3b5; font-size: var(--vs-fs-meta); }
+.vs-step > .vs-hint, .vs-step p.vs-hint { margin: 0; }
+.vs-field { display: flex; flex-direction: column; gap: 6px; }
+.vs-field > span { color: var(--vs-text-2); font-size: var(--vs-fs-meta); font-weight: var(--vs-fw-medium); }
+.vs-field input, .vs-field textarea { background: var(--vs-surface-2); border: 1px solid transparent; border-radius: var(--vs-radius-control); color: var(--vs-text-1); font-size: var(--vs-fs-control); line-height: 1.5; }
+.vs-field input:focus, .vs-field textarea:focus { border-color: var(--vs-accent-line); outline: none; }
+.vs-save-row { align-items: flex-end; }
+.vs-save-row .vs-drop { height: 33px; }
+
+/* Saved voices */
+.vs-voices-side { display: flex; flex-direction: column; gap: var(--vs-space-8); min-width: 0; }
+.vs-voices-side-head { display: flex; align-items: center; gap: var(--vs-space-8); }
+.vs-voices-side-head h2 { margin: 0; display: flex; align-items: center; gap: 8px; font-size: var(--vs-fs-section); font-weight: var(--vs-fw-semibold); }
+.vs-accent-link { color: var(--vs-accent); text-decoration: none; }
+.vs-voice-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--vs-space-8); }
+.vs-voice-list.compact { grid-template-columns: 1fr; }
+.vs-voice { display: flex; align-items: center; gap: var(--vs-space-10); padding: 10px 12px; border-radius: var(--vs-radius-item); background: var(--vs-surface-1); border: 1px solid var(--vs-border); min-width: 0; }
+.vs-voice:hover { background: var(--vs-surface-2); }
+.vs-voice-avatar { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-size: 13px; font-weight: var(--vs-fw-bold); }
+.vs-voice-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.vs-voice-title { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.vs-voice-title b { font-size: 13px; font-weight: var(--vs-fw-semibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-voice-main small { color: var(--vs-text-2); font-size: var(--vs-fs-badge); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vs-voice .vs-icon-btn { width: 31px; height: 29px; min-height: 29px; }
+.vs-voices .vs-btn.vs-sm { min-height: 25px; padding: 4px 10px; font-size: var(--vs-fs-meta); }
+.vs-voice-audio { display: none; }
+.vs-voices-saved { display: flex; flex-direction: column; gap: var(--vs-space-12); }
+.vs-voice-hint { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: var(--vs-radius-item); }
+.vs-voice-hint b { display: flex; align-items: center; gap: 6px; font-size: var(--vs-fs-control); font-weight: var(--vs-fw-semibold); }
+.vs-voice-hint b svg { color: var(--vs-accent); }
+.vs-voice-hint p { margin: 0; color: var(--vs-text-2); font-size: var(--vs-fs-meta); line-height: var(--vs-lh-body); }
+.vs-voice-hint .vs-link { padding: 0; font-size: inherit; color: var(--vs-accent); }
+.vs-gen-voices-link { margin: 0; }
+
+@media (max-width: 1100px) { .vs-voices-grid { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .vs-voice-list { grid-template-columns: 1fr; } }
+.vs-voice-list .vs-empty { grid-column: 1 / -1; padding: 18px; border-radius: var(--vs-radius-item); border: 1px dashed var(--vs-border); color: var(--vs-text-3); font-size: var(--vs-fs-meta); text-align: center; }

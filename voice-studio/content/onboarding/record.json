@@ -1,0 +1,10 @@
+{
+  "key": "record",
+  "title": "2. Record and prepare audio",
+  "text": "The Audio library is on the left. Record microphone captures your voice, or Import audio brings in a file. Select a clip to see its waveform. Use Play to listen, and drag the handles or enter In and Out times to trim.",
+  "generation": {
+    "seconds": 15.12,
+    "elapsed": 57.11746406555176,
+    "peak_gpu_gib": 4.577696800231934
+  }
+}
