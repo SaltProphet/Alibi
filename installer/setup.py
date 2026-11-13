@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import queue
+import random
 import shutil
 import subprocess
 import sys
@@ -23,6 +24,17 @@ PYTHON_INSTALLER_URL = f"https://www.python.org/ftp/python/{PYTHON_VERSION}/pyth
 FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
 BASE_REPOS = ["Qwen/Qwen3-TTS-12Hz-1.7B-Base", "Qwen/Qwen3-TTS-Tokenizer-12Hz"]
 VOICE_DESIGN_REPO = "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
+COLORS = {
+    "ink": "#171310",
+    "brown": "#2a201b",
+    "cream": "#f1e8d2",
+    "orange": "#e75b2c",
+    "muted": "#b9aa92",
+}
+
+
+def visual_tagline() -> str:
+    return "Runs locally. No account required."
 
 
 def window_geometry() -> str:
@@ -190,24 +202,41 @@ class InstallerWindow:
         self.root.geometry(window_geometry())
         self.root.minsize(700, 560)
         self.root.resizable(True, True)
+        self.root.configure(background=COLORS["ink"])
+        style = ttk.Style(self.root)
+        style.configure("Card.TFrame", background=COLORS["cream"])
+        style.configure("Card.TLabel", background=COLORS["cream"], foreground=COLORS["ink"], font=("Segoe UI", 10))
+        style.configure("Muted.Card.TLabel", background=COLORS["cream"], foreground="#55483b", font=("Segoe UI", 9))
+        style.configure("Card.TCheckbutton", background=COLORS["cream"], foreground=COLORS["ink"], font=("Segoe UI", 10))
+        style.map("Card.TCheckbutton", background=[("active", COLORS["cream"])])
+        style.configure("Orange.TButton", background=COLORS["orange"], foreground="#ffffff", padding=(18, 8), font=("Segoe UI", 10, "bold"))
+        style.map("Orange.TButton", background=[("active", "#f27647"), ("disabled", "#9a7664")])
+        style.configure("Card.Horizontal.TProgressbar", troughcolor="#d4c8b1", background=COLORS["orange"], lightcolor=COLORS["orange"], darkcolor=COLORS["orange"])
         self.events: queue.Queue[tuple[str, object]] = queue.Queue()
         self.voice_design = tk.BooleanVar(value=False)
-        ttk.Label(self.root, text="Alibi", font=("Segoe UI", 22, "bold")).pack(anchor="w", padx=30, pady=(24, 2))
-        ttk.Label(self.root, text="One-click local voice workspace installer", font=("Segoe UI", 10)).pack(anchor="w", padx=32)
-        ttk.Checkbutton(self.root, text="Install VoiceDesign model too (adds about 4.2 GB)", variable=self.voice_design).pack(anchor="w", padx=32, pady=18)
-        self.status = ttk.Label(self.root, text="Ready to install")
-        self.status.pack(anchor="w", padx=32)
-        self.progress = ttk.Progressbar(self.root, mode="indeterminate")
-        self.progress.pack(fill="x", padx=32, pady=(8, 12))
-        button_row = ttk.Frame(self.root)
-        button_row.pack(fill="x", padx=32, pady=(0, 10))
-        self.button = ttk.Button(button_row, text="Install Alibi", command=self.start, takefocus=True)
+        self.hero = tk.Canvas(self.root, height=250, background=COLORS["ink"], highlightthickness=0)
+        self.hero.pack(fill="x")
+        self.hero.bind("<Configure>", self.draw_hero)
+        self.draw_hero()
+        card = ttk.Frame(self.root, style="Card.TFrame", padding=(26, 18, 26, 20))
+        card.pack(fill="both", expand=True, padx=24, pady=(0, 24))
+        ttk.Label(card, text="INSTALL ALIBI", style="Muted.Card.TLabel", font=("Segoe UI", 9, "bold")).pack(anchor="w")
+        ttk.Label(card, text="A private voice workspace, installed on this PC.", style="Card.TLabel", font=("Segoe UI", 13, "bold")).pack(anchor="w", pady=(3, 2))
+        ttk.Label(card, text="Base model and tokenizer are included. VoiceDesign is optional.", style="Muted.Card.TLabel").pack(anchor="w")
+        ttk.Checkbutton(card, text="Add VoiceDesign model (about 4.2 GB extra)", variable=self.voice_design, style="Card.TCheckbutton").pack(anchor="w", pady=(13, 8))
+        self.status = ttk.Label(card, text="Ready to install", style="Card.TLabel")
+        self.status.pack(anchor="w")
+        self.progress = ttk.Progressbar(card, mode="indeterminate", style="Card.Horizontal.TProgressbar")
+        self.progress.pack(fill="x", pady=(7, 9))
+        button_row = ttk.Frame(card, style="Card.TFrame")
+        button_row.pack(fill="x", pady=(0, 8))
+        self.button = ttk.Button(button_row, text="Install Alibi", command=self.start, takefocus=True, style="Orange.TButton")
         self.button.pack(side="right")
-        ttk.Label(button_row, text="Press Enter to start", foreground="#555555").pack(side="left")
-        log_frame = ttk.LabelFrame(self.root, text="Installation log")
-        log_frame.pack(fill="both", expand=True, padx=32, pady=(0, 24))
+        ttk.Label(button_row, text="Tab to navigate · Enter to install", style="Muted.Card.TLabel").pack(side="left")
+        log_frame = tk.Frame(card, background=COLORS["brown"], highlightbackground="#bcae96", highlightthickness=1)
+        log_frame.pack(fill="both", expand=True)
         self.log_text = tk.Text(log_frame, height=log_height(), width=86, state="disabled", wrap="word",
-                                background="#ffffff", foreground="#202020", insertbackground="#202020",
+                                background=COLORS["brown"], foreground=COLORS["cream"], insertbackground=COLORS["cream"],
                                 takefocus=True, relief="solid", borderwidth=1)
         scrollbar = ttk.Scrollbar(log_frame, orient="vertical", command=self.log_text.yview)
         self.log_text.configure(yscrollcommand=scrollbar.set)
@@ -216,6 +245,24 @@ class InstallerWindow:
         self.root.bind("<Return>", lambda _event: self.start() if str(self.button["state"]) == "normal" else None)
         self.root.after(250, self.button.focus_set)
         self.root.after(100, self.poll)
+
+    def draw_hero(self, _event=None) -> None:
+        width = max(self.hero.winfo_width(), 760)
+        self.hero.delete("all")
+        self.hero.create_rectangle(0, 0, width, 250, fill=COLORS["ink"], outline="")
+        rng = random.Random(17)
+        for _ in range(240):
+            x = rng.randrange(width)
+            y = rng.randrange(250)
+            size = rng.choice((1, 1, 1, 2, 3))
+            tint = rng.choice(("#221a16", "#30231d", "#3a2a22", "#1d1714"))
+            self.hero.create_oval(x, y, x + size, y + size, fill=tint, outline="")
+        for y in (18, 47, 79, 111, 146, 183, 221):
+            self.hero.create_line(0, y, width, y + rng.choice((-2, -1, 0, 1, 2)), fill="#241a16", width=1)
+        self.hero.create_text(32, 25, text="ALIBI", anchor="nw", fill=COLORS["cream"], font=("Georgia", 64, "bold"))
+        self.hero.create_rectangle(34, 116, max(260, width - 34), 124, fill=COLORS["orange"], outline="")
+        self.hero.create_text(34, 139, text=visual_tagline(), anchor="nw", fill=COLORS["cream"], font=("Georgia", 17, "bold"))
+        self.hero.create_text(34, 211, text="SALT PROPHET  /  ALIBI", anchor="nw", fill=COLORS["muted"], font=("Segoe UI", 8, "bold"))
 
     def write_log(self, text: str) -> None:
         self.events.put(("log", text))

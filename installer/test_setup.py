@@ -24,6 +24,12 @@ class SetupPlanningTests(unittest.TestCase):
         self.assertEqual(setup.window_geometry(), "760x620")
         self.assertLessEqual(setup.log_height(), 10)
 
+    def test_alibi_visual_system_is_defined(self):
+        self.assertEqual(setup.COLORS["ink"], "#171310")
+        self.assertEqual(setup.COLORS["cream"], "#f1e8d2")
+        self.assertEqual(setup.COLORS["orange"], "#e75b2c")
+        self.assertEqual(setup.visual_tagline(), "Runs locally. No account required.")
+
 
 if __name__ == "__main__":
     unittest.main()
