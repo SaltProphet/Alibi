@@ -30,10 +30,8 @@ class SetupPlanningTests(unittest.TestCase):
         self.assertEqual(setup.COLORS["orange"], "#e75b2c")
         self.assertEqual(setup.visual_tagline(), "Runs locally. No account required.")
 
-    def test_python_install_command_quotes_target_and_uses_per_user_mode(self):
-        command = setup.python_install_command(Path(r"C:\Users\Ada Smith\AppData\Local\Alibi\runtime"), Path("python-installer.exe"))
-        self.assertIn("InstallAllUsers=0", command)
-        self.assertIn('TargetDir="C:\\Users\\Ada Smith\\AppData\\Local\\Alibi\\runtime"', command)
+    def test_python_runtime_uses_state_free_nuget_package(self):
+        self.assertIn("nuget.org/api/v2/package/python/3.12.10", setup.PYTHON_RUNTIME_URL)
 
 
 if __name__ == "__main__":

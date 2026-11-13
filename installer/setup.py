@@ -20,7 +20,7 @@ import zipfile
 
 APP_NAME = "Alibi"
 PYTHON_VERSION = "3.12.10"
-PYTHON_INSTALLER_URL = f"https://www.python.org/ftp/python/{PYTHON_VERSION}/python-{PYTHON_VERSION}-amd64.exe"
+PYTHON_RUNTIME_URL = f"https://www.nuget.org/api/v2/package/python/{PYTHON_VERSION}"
 FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
 BASE_REPOS = ["Qwen/Qwen3-TTS-12Hz-1.7B-Base", "Qwen/Qwen3-TTS-Tokenizer-12Hz"]
 VOICE_DESIGN_REPO = "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
@@ -77,14 +77,6 @@ def download(url: str, destination: Path, progress) -> None:
             progress(completed, total)
 
 
-def python_install_command(target: Path, installer: Path) -> list[str]:
-    return [
-        str(installer), "/quiet", "InstallAllUsers=0", "Include_pip=1",
-        "Include_launcher=0", "PrependPath=0", "Include_test=0",
-        f'TargetDir="{target}"',
-    ]
-
-
 def run_logged(args: list[str], *, cwd: Path, env: dict[str, str], log) -> None:
     log("$ " + " ".join(args))
     process = subprocess.Popen(args, cwd=cwd, env=env, stdout=subprocess.PIPE,
@@ -96,20 +88,27 @@ def run_logged(args: list[str], *, cwd: Path, env: dict[str, str], log) -> None:
         raise RuntimeError(f"Command failed with exit code {process.returncode}: {args[0]}")
 
 
-def python_install(python_installer: Path, target: Path, log) -> Path:
+def python_install(runtime_package: Path, target: Path, log) -> Path:
     target.mkdir(parents=True, exist_ok=True)
-    command = python_install_command(target, python_installer)
-    log("Installing bundled Python runtime...")
-    result = subprocess.run(command, check=True, capture_output=True, text=True, errors="replace")
+    log("Extracting bundled Python runtime...")
+    with zipfile.ZipFile(runtime_package) as bundle:
+        members = [member for member in bundle.namelist() if member.startswith("tools/")]
+        if not members:
+            raise RuntimeError("Python runtime package did not contain its tools directory.")
+        for member in members:
+            relative = Path(member.removeprefix("tools/"))
+            if not relative.parts:
+                continue
+            destination = target / relative
+            if member.endswith("/"):
+                destination.mkdir(parents=True, exist_ok=True)
+            else:
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                with bundle.open(member) as source, destination.open("wb") as output:
+                    shutil.copyfileobj(source, output)
     python = target / "python.exe"
     if not python.exists():
-        candidates = list(target.rglob("python.exe"))
-        if candidates:
-            python = candidates[0]
-        else:
-            contents = ", ".join(item.name for item in target.iterdir()) if target.exists() else "target directory missing"
-            detail = result.stderr.strip() or result.stdout.strip()
-            raise RuntimeError(f"Python installation completed but python.exe was not found in {target}. Contents: {contents}. {detail}".strip())
+        raise RuntimeError(f"Python runtime extraction completed but python.exe was not found in {target}.")
     log(f"Installed Python {PYTHON_VERSION}.")
     return python
 
@@ -170,10 +169,10 @@ def install(voice_design: bool, log, progress) -> None:
 
     with tempfile.TemporaryDirectory(prefix="alibi-setup-") as temporary:
         temp = Path(temporary)
-        python_installer = temp / "python.exe"
+        python_package = temp / "python.nupkg"
         log("Downloading Python 3.12 runtime...")
-        download(PYTHON_INSTALLER_URL, python_installer, progress)
-        python = python_install(python_installer, runtime_dir, log)
+        download(PYTHON_RUNTIME_URL, python_package, progress)
+        python = python_install(python_package, runtime_dir, log)
         ffmpeg_archive = temp / "ffmpeg.zip"
         log("Downloading FFmpeg...")
         download(FFMPEG_URL, ffmpeg_archive, progress)
