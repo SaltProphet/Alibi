@@ -77,6 +77,14 @@ def download(url: str, destination: Path, progress) -> None:
             progress(completed, total)
 
 
+def python_install_command(target: Path, installer: Path) -> list[str]:
+    return [
+        str(installer), "/quiet", "InstallAllUsers=0", "Include_pip=1",
+        "Include_launcher=0", "PrependPath=0", "Include_test=0",
+        f'TargetDir="{target}"',
+    ]
+
+
 def run_logged(args: list[str], *, cwd: Path, env: dict[str, str], log) -> None:
     log("$ " + " ".join(args))
     process = subprocess.Popen(args, cwd=cwd, env=env, stdout=subprocess.PIPE,
@@ -90,13 +98,18 @@ def run_logged(args: list[str], *, cwd: Path, env: dict[str, str], log) -> None:
 
 def python_install(python_installer: Path, target: Path, log) -> Path:
     target.mkdir(parents=True, exist_ok=True)
-    subprocess.run([
-        str(python_installer), "/quiet", "InstallAllUsers=0", "Include_pip=1",
-        "PrependPath=0", "Include_test=0", f"TargetDir={target}",
-    ], check=True)
+    command = python_install_command(target, python_installer)
+    log("Installing bundled Python runtime...")
+    result = subprocess.run(command, check=True, capture_output=True, text=True, errors="replace")
     python = target / "python.exe"
     if not python.exists():
-        raise RuntimeError("Python installation completed but python.exe was not found.")
+        candidates = list(target.rglob("python.exe"))
+        if candidates:
+            python = candidates[0]
+        else:
+            contents = ", ".join(item.name for item in target.iterdir()) if target.exists() else "target directory missing"
+            detail = result.stderr.strip() or result.stdout.strip()
+            raise RuntimeError(f"Python installation completed but python.exe was not found in {target}. Contents: {contents}. {detail}".strip())
     log(f"Installed Python {PYTHON_VERSION}.")
     return python
 
@@ -204,22 +217,22 @@ class InstallerWindow:
         self.root.resizable(True, True)
         self.root.configure(background=COLORS["ink"])
         style = ttk.Style(self.root)
-        style.configure("Card.TFrame", background=COLORS["cream"])
-        style.configure("Card.TLabel", background=COLORS["cream"], foreground=COLORS["ink"], font=("Segoe UI", 10))
-        style.configure("Muted.Card.TLabel", background=COLORS["cream"], foreground="#55483b", font=("Segoe UI", 9))
-        style.configure("Card.TCheckbutton", background=COLORS["cream"], foreground=COLORS["ink"], font=("Segoe UI", 10))
-        style.map("Card.TCheckbutton", background=[("active", COLORS["cream"])])
+        style.configure("Card.TFrame", background=COLORS["ink"])
+        style.configure("Card.TLabel", background=COLORS["ink"], foreground=COLORS["cream"], font=("Segoe UI", 10))
+        style.configure("Muted.Card.TLabel", background=COLORS["ink"], foreground=COLORS["muted"], font=("Segoe UI", 9))
+        style.configure("Card.TCheckbutton", background=COLORS["ink"], foreground=COLORS["cream"], font=("Segoe UI", 10))
+        style.map("Card.TCheckbutton", background=[("active", COLORS["ink"])])
         style.configure("Orange.TButton", background=COLORS["orange"], foreground="#ffffff", padding=(18, 8), font=("Segoe UI", 10, "bold"))
         style.map("Orange.TButton", background=[("active", "#f27647"), ("disabled", "#9a7664")])
-        style.configure("Card.Horizontal.TProgressbar", troughcolor="#d4c8b1", background=COLORS["orange"], lightcolor=COLORS["orange"], darkcolor=COLORS["orange"])
+        style.configure("Card.Horizontal.TProgressbar", troughcolor=COLORS["brown"], background=COLORS["orange"], lightcolor=COLORS["orange"], darkcolor=COLORS["orange"])
         self.events: queue.Queue[tuple[str, object]] = queue.Queue()
         self.voice_design = tk.BooleanVar(value=False)
         self.hero = tk.Canvas(self.root, height=250, background=COLORS["ink"], highlightthickness=0)
         self.hero.pack(fill="x")
         self.hero.bind("<Configure>", self.draw_hero)
         self.draw_hero()
-        card = ttk.Frame(self.root, style="Card.TFrame", padding=(26, 18, 26, 20))
-        card.pack(fill="both", expand=True, padx=24, pady=(0, 24))
+        card = ttk.Frame(self.root, style="Card.TFrame", padding=(34, 14, 34, 20))
+        card.pack(fill="both", expand=True, padx=0, pady=(0, 0))
         ttk.Label(card, text="INSTALL ALIBI", style="Muted.Card.TLabel", font=("Segoe UI", 9, "bold")).pack(anchor="w")
         ttk.Label(card, text="A private voice workspace, installed on this PC.", style="Card.TLabel", font=("Segoe UI", 13, "bold")).pack(anchor="w", pady=(3, 2))
         ttk.Label(card, text="Base model and tokenizer are included. VoiceDesign is optional.", style="Muted.Card.TLabel").pack(anchor="w")
@@ -230,10 +243,16 @@ class InstallerWindow:
         self.progress.pack(fill="x", pady=(7, 9))
         button_row = ttk.Frame(card, style="Card.TFrame")
         button_row.pack(fill="x", pady=(0, 8))
-        self.button = ttk.Button(button_row, text="Install Alibi", command=self.start, takefocus=True, style="Orange.TButton")
+        self.button = tk.Button(
+            button_row, text="Install Alibi", command=self.start, takefocus=True,
+            background=COLORS["orange"], foreground="#ffffff",
+            activebackground="#f27647", activeforeground="#ffffff",
+            disabledforeground="#ead8cb", relief="flat", borderwidth=0,
+            padx=18, pady=8, font=("Segoe UI", 10, "bold"), cursor="hand2",
+        )
         self.button.pack(side="right")
         ttk.Label(button_row, text="Tab to navigate · Enter to install", style="Muted.Card.TLabel").pack(side="left")
-        log_frame = tk.Frame(card, background=COLORS["brown"], highlightbackground="#bcae96", highlightthickness=1)
+        log_frame = tk.Frame(card, background=COLORS["brown"], highlightbackground=COLORS["orange"], highlightthickness=1)
         log_frame.pack(fill="both", expand=True)
         self.log_text = tk.Text(log_frame, height=log_height(), width=86, state="disabled", wrap="word",
                                 background=COLORS["brown"], foreground=COLORS["cream"], insertbackground=COLORS["cream"],
