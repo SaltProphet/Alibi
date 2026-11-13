@@ -1,5 +1,5 @@
 {
-  "transcript": "Welcome to Voice Studio. Let's take a quick look around, from recording your voice to creating your final mix.",
+  "transcript": "Welcome to Alibi. Let's take a quick look around, from recording your voice to creating your final mix.",
   "voice_description": "A clearly adult woman in her thirties with a friendly, natural speaking voice. Warm, confident, and welcoming, like a helpful podcast host introducing her studio. Medium pitch, clear full-voiced pronunciation, normal conversational pace and breathing, gently upbeat. Relaxed and approachable, with restrained expression. No seductive delivery, no sultry tone, no breathy or husky effect, no whispering, no exaggerated vocal fry, no background music.",
   "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
   "sample_rate": 24000,

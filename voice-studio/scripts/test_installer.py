@@ -31,6 +31,12 @@ class InstallerPlanningTests(unittest.TestCase):
         self.assertIn("CPU", summary)
         self.assertNotIn(str(Path.home()), summary)
 
+    def test_bundled_install_does_not_require_build_tools(self):
+        self.assertEqual(installer.required_commands(bundled=True), ["ffmpeg"])
+
+    def test_bundled_install_skips_frontend_build(self):
+        self.assertFalse(installer.should_build_frontend(bundled=True))
+
 
 if __name__ == "__main__":
     unittest.main()

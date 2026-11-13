@@ -30,6 +30,6 @@ for ($attempt=0;$attempt -lt 60;$attempt++) {
   Start-Sleep -Seconds 1
 }
 if (!$ready) { throw 'Studio did not become ready. Inspect logs\backend-error.log.' }
-Write-Host 'Voice Studio: http://127.0.0.1:8765'
+Write-Host 'Alibi: http://127.0.0.1:8765'
 Write-Host "Data: $env:VOICE_STUDIO_DATA"
 if (!$NoBrowser) { Start-Process 'http://127.0.0.1:8765' }

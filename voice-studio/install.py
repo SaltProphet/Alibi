@@ -1,4 +1,4 @@
-"""Cross-platform Voice Studio installer.
+"""Cross-platform Alibi installer.
 
 This script installs the project into a local .venv and never writes outside
 the repository except for the package-manager caches used by Python and npm.
@@ -59,8 +59,16 @@ def python_in_venv() -> Path:
     return VENV / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 
 
-def check_prerequisites() -> None:
-    missing = [name for name in ("git", "node", "npm", "ffmpeg") if not command(name)]
+def required_commands(*, bundled: bool = False) -> list[str]:
+    return ["ffmpeg"] if bundled else ["git", "node", "npm", "ffmpeg"]
+
+
+def should_build_frontend(*, bundled: bool = False) -> bool:
+    return not bundled
+
+
+def check_prerequisites(*, bundled: bool = False) -> None:
+    missing = [name for name in required_commands(bundled=bundled) if not command(name)]
     if missing:
         raise SystemExit("Missing required command(s): " + ", ".join(missing) +
                          ". Install them with your operating system package manager, then rerun this installer.")
@@ -69,15 +77,18 @@ def check_prerequisites() -> None:
 
 
 def install(args: argparse.Namespace) -> None:
-    check_prerequisites()
+    bundled = bool(getattr(args, "bundled", False))
+    check_prerequisites(bundled=bundled)
     cuda = has_cuda()
-    print("Voice Studio installer:", platform_summary(cuda), flush=True)
+    print("Alibi installer:", platform_summary(cuda), flush=True)
     for folder in (ROOT / "vendor", ROOT / "models", ROOT / "cache", ROOT / "logs", ROOT / "data"):
         folder.mkdir(parents=True, exist_ok=True)
 
-    if not (ROOT / "vendor/Qwen3-TTS/pyproject.toml").is_file():
+    if not bundled and not (ROOT / "vendor/Qwen3-TTS/pyproject.toml").is_file():
         run(["git", "clone", "https://github.com/QwenLM/Qwen3-TTS.git", "vendor/Qwen3-TTS"])
         run(["git", "-C", "vendor/Qwen3-TTS", "checkout", "--detach", QWEN_REVISION])
+    if not (ROOT / "vendor/Qwen3-TTS/pyproject.toml").is_file():
+        raise SystemExit("Bundled Qwen3-TTS source is missing from the installer payload.")
 
     if not python_in_venv().exists():
         run([sys.executable, "-m", "venv", str(VENV)])
@@ -94,8 +105,9 @@ def install(args: argparse.Namespace) -> None:
     finally:
         requirements_path.unlink(missing_ok=True)
     run([py, "-m", "pip", "check"])
-    run(["npm", "--prefix", "frontend", "ci"])
-    run(["npm", "--prefix", "frontend", "run", "build"])
+    if should_build_frontend(bundled=bundled):
+        run(["npm", "--prefix", "frontend", "ci"])
+        run(["npm", "--prefix", "frontend", "run", "build"])
 
     if not args.skip_models:
         model_args = [py, "scripts/download_models.py"]
@@ -106,14 +118,15 @@ def install(args: argparse.Namespace) -> None:
         run([py, "scripts/create_onboarding.py"])
         if args.voice_design:
             run([py, "scripts/create_archetypes.py"])
-    print("Installation complete. Run ./launch.py (or Launch-Voice-Studio.cmd on Windows).", flush=True)
+    print("Installation complete. Run ./launch.py to start Alibi.", flush=True)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Install Voice Studio on Windows, macOS, or Linux.")
+    parser = argparse.ArgumentParser(description="Install Alibi on Windows, macOS, or Linux.")
     parser.add_argument("--skip-models", action="store_true", help="Install code and dependencies without model downloads.")
     parser.add_argument("--voice-design", action="store_true", help="Also download VoiceDesign weights.")
     parser.add_argument("--demo", action="store_true", help="Generate/install packaged demo profiles and audio.")
+    parser.add_argument("--bundled", action="store_true", help="Use embedded source and production frontend; do not require Git or Node.js.")
     install(parser.parse_args())
 
 

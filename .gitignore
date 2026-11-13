@@ -6,6 +6,8 @@ voice-studio/data/
 voice-studio/logs/
 voice-studio/vendor/
 voice-studio/frontend/node_modules/
+build/
+*.spec
 __pycache__/
 .playwright-cli/
 .env

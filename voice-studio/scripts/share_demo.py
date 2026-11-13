@@ -52,7 +52,7 @@ def start():
     with httpx.Client(trust_env=False,timeout=3) as client:
         try:
             inference=client.get('http://127.0.0.1:8766/health');inference.raise_for_status()
-        except httpx.HTTPError:raise SystemExit('Start your personal Voice Studio first so the local inference worker is available.')
+        except httpx.HTTPError:raise SystemExit('Start your personal Alibi first so the local inference worker is available.')
         try:client.get('http://127.0.0.1:8767/api/health')
         except httpx.ConnectError:pass
         else:raise SystemExit('Port 8767 is already occupied. Stop the existing demo before starting another.')

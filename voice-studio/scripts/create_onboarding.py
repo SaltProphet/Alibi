@@ -37,7 +37,7 @@ def install(data):
         id=uuid.uuid4().hex;(data/'references').mkdir(parents=True,exist_ok=True);shutil.copyfile(SAMPLE_REFERENCE,data/'references'/(id+'.wav'))
         profile=dict(id=id,name='Demo voice · Qwen sample (not your voice)',asset=ref['id'],reference=id+'.wav',transcript=SAMPLE_TRANSCRIPT,onboarding_key='sample-voice')
         (profiles/(id+'.json')).write_text(json.dumps(profile,indent=2),encoding='utf-8')
-    originals=[('demo-hello',ROOT/'content/demo/hello.wav','Demo 01 · Hello','Hello. This is a local voice cloning test for Voice Studio.'),('demo-welcome',ROOT/'content/demo/welcome.wav','Demo 02 · Welcome','Welcome to Voice Studio. This speech was generated entirely on this computer.'),('demo-restart',ROOT/'content/demo/saved-voice.wav','Demo 03 · Saved voice','The studio has restarted. Your saved voice is ready.')]
+    originals=[('demo-hello',ROOT/'content/demo/hello.wav','Demo 01 · Hello','Hello. This is a local voice cloning test for Alibi.'),('demo-welcome',ROOT/'content/demo/welcome.wav','Demo 02 · Welcome','Welcome to Alibi. This speech was generated entirely on this computer.'),('demo-restart',ROOT/'content/demo/saved-voice.wav','Demo 03 · Saved voice','The studio has restarted. Your saved voice is ready.')]
     for key,source,name,text in originals:install_asset(data,source,key,name,profile=profile['id'],text=text,provenance='Restored real Qwen3-TTS generation from installation tests')
     narrator_ref=install_asset(data,REFERENCE,'narrator-reference','Studio host · Synthetic adult female voice reference',transcript=TRANSCRIPT,synthetic=True)
     narrator=next((json.loads(p.read_text(encoding='utf-8')) for p in profiles.glob('*.json') if json.loads(p.read_text(encoding='utf-8')).get('onboarding_key')=='narrator-voice'),None)
@@ -79,7 +79,7 @@ with httpx.Client(timeout=1800,trust_env=False) as c:
         for chapter in CHAPTERS:
             a=install_asset(data,PACK/(chapter['key']+'.wav'),'guide-'+chapter['key'],chapter['title'],profile=profile['id'],text=chapter['text'],generation=json.loads((PACK/(chapter['key']+'.json')).read_text())['generation'])
             assets.append(dict(id=uuid.uuid4().hex,asset=a['id'],track='narration',at=at,**{'in':0,'out':a['duration']}));at+=a['duration']+.5
-        install_asset(data,PACK/'full-guide.wav','guide-full','Start here · Voice Studio audio walkthrough',profile=profile['id'],text='\n\n'.join(ch['text'] for ch in CHAPTERS))
+        install_asset(data,PACK/'full-guide.wav','guide-full','Start here · Alibi audio walkthrough',profile=profile['id'],text='\n\n'.join(ch['text'] for ch in CHAPTERS))
         sessions=data/'sessions';sessions.mkdir(parents=True,exist_ok=True)
         existing=next((json.loads(p.read_text(encoding='utf-8')) for p in sessions.glob('*.json') if json.loads(p.read_text(encoding='utf-8')).get('onboarding_key')=='guide-session'),None)
         if not existing:

@@ -3,8 +3,8 @@
 This document describes an earlier Visual-mode implementation. Visual mode is not part of the current shipped build; retain this file only as historical reference.
 
 This historical document describes an earlier AuraVoice reference integration.
-It is not part of the current Line Please interface. The current build uses
-the standard Line Please workspaces documented in the repository README.
+It is not part of the current Alibi interface. The current build uses
+the standard Alibi workspaces documented in the repository README.
 
 ## Workflow
 

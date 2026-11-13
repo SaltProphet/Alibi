@@ -24,7 +24,7 @@ export function SideNav({view,onNavigate,health}){
  const state=!health?'checking':inference==='ready'?'ready':'offline';
  const label={checking:'Checking',ready:'Ready',offline:'Offline'}[state];
  return <aside className="vs-side" aria-label="Primary navigation">
-  <button className="vs-logo" aria-label="Voice Studio: go to Generate" onClick={()=>onNavigate('generate')}><Icon icon={AudioWaveform} size={22} strokeWidth={2}/></button>
+  <button className="vs-logo" aria-label="Alibi: go to Generate" onClick={()=>onNavigate('generate')}><Icon icon={AudioWaveform} size={22} strokeWidth={2}/></button>
   <nav className="vs-side-links">{NAV.map(([key,text,icon])=><button key={key} className={view===key?'active':''} aria-current={view===key?'page':undefined} onClick={()=>onNavigate(key)}><Icon icon={icon}/><span>{text}</span></button>)}</nav>
   <div className="vs-side-foot">
    <div className={'vs-model '+state} role="status" title={state==='ready'?'Inference worker ready'+(health?.inference?.model?' ('+health.inference.model+' model)':''):state==='offline'?'Inference worker unavailable':'Checking inference worker'}><span className="vs-model-row"><i/><Icon icon={Cpu} size={14}/></span><span>Models</span><b>{label}</b></div>

@@ -1,4 +1,4 @@
-"""Voice Studio API; all original inputs are immutable and each edit creates a derivative."""
+"""Alibi API; all original inputs are immutable and each edit creates a derivative."""
 from pathlib import Path
 import json,uuid,shutil,subprocess,os,time,threading
 from concurrent.futures import ThreadPoolExecutor
@@ -16,7 +16,7 @@ ROOT=Path(__file__).resolve().parents[1]
 DATA=Path(os.environ.get('VOICE_STUDIO_DATA',ROOT/'data')).resolve()
 WORKER=os.environ.get('VOICE_STUDIO_WORKER_URL','http://127.0.0.1:8766').rstrip('/')
 for folder in ['originals','audio','references','profiles','sessions','exports','tests','folders']: (DATA/folder).mkdir(parents=True,exist_ok=True)
-app=FastAPI(title='Voice Studio'); app.add_middleware(TrustedHostMiddleware,allowed_hosts=['127.0.0.1','localhost','testserver'])
+app=FastAPI(title='Alibi'); app.add_middleware(TrustedHostMiddleware,allowed_hosts=['127.0.0.1','localhost','testserver'])
 pool=ThreadPoolExecutor(max_workers=1); jobs={}; guard=threading.Lock()
 @app.middleware('http')
 async def local_origin(request:Request,call_next):
@@ -155,7 +155,7 @@ def run_generation(id,g):
         asset=register(target,'Speech '+time.strftime('%H-%M-%S'),profile=g.profile,text=g.text,generation=result.json(),**provenance)
         jobs[id].update(status='complete',asset=asset)
     except httpx.ConnectError:
-        jobs[id].update(status='failed',error='The local inference worker is unavailable. Restart Voice Studio using its launcher, then try again.')
+        jobs[id].update(status='failed',error='The local inference worker is unavailable. Restart Alibi using its launcher, then try again.')
     except Exception as e: jobs[id].update(status='failed',error=str(e))
 @app.post('/api/generate')
 def generate(g:Generation):

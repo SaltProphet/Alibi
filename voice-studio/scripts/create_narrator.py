@@ -12,7 +12,7 @@ torch.set_num_threads(4)
 cuda=torch.cuda.is_available();device='cuda:0' if cuda else 'cpu';dtype=torch.bfloat16 if cuda else torch.float32
 print('Loading VoiceDesign with',device,flush=True)
 m=Qwen3TTSModel.from_pretrained(str(path),device_map=device,dtype=dtype,attn_implementation='sdpa',local_files_only=True)
-text="Welcome to Voice Studio. Let's take a quick look around, from recording your voice to creating your final mix."
+text="Welcome to Alibi. Let's take a quick look around, from recording your voice to creating your final mix."
 instruct='A clearly adult woman in her thirties with a friendly, natural speaking voice. Warm, confident, and welcoming, like a helpful podcast host introducing her studio. Medium pitch, clear full-voiced pronunciation, normal conversational pace and breathing, gently upbeat. Relaxed and approachable, with restrained expression. No seductive delivery, no sultry tone, no breathy or husky effect, no whispering, no exaggerated vocal fry, no background music.'
 print('Generating friendly natural adult female narrator',flush=True)
 wavs,sr=m.generate_voice_design(text=text,language='English',instruct=instruct,max_new_tokens=512)

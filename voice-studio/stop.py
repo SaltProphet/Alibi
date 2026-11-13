@@ -1,4 +1,4 @@
-"""Portable launcher cleanup for Voice Studio."""
+"""Portable launcher cleanup for Alibi."""
 from __future__ import annotations
 
 import json
@@ -13,7 +13,7 @@ PID_FILE = ROOT / "logs/voice-studio-processes.json"
 
 def main() -> None:
     if not PID_FILE.exists():
-        print("Voice Studio is not running.")
+        print("Alibi is not running.")
         return
     for item in json.loads(PID_FILE.read_text(encoding="utf-8")):
         try:

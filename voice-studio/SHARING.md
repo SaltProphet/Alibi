@@ -6,10 +6,10 @@ This installation supports a temporary HTTPS demo for explicitly allowed email a
 
 On a fresh installation, install `cloudflared` with support for the `--allowed-mail` flag and create `logs/sharing-allowlist.json` containing a JSON list of the individual email addresses you choose. No allowlist or live tunnel configuration is included in Git.
 
-1. Keep the regular Line Please running; the demo uses its inference worker.
+1. Keep the regular Alibi running; the demo uses its inference worker.
 2. Double-click **Start-Demo-Sharing.cmd**. It starts a separate loopback demo backend and prints the protected URL. If already running, it prints the current link.
 3. Send that URL yourself to the invited people. This script does not send invitations.
-4. Double-click **Stop-Demo-Sharing.cmd** to take the shared link offline. Your personal studio stays running. Stopping all of Line Please also stops sharing.
+4. Double-click **Stop-Demo-Sharing.cmd** to take the shared link offline. Your personal studio stays running. Stopping all of Alibi also stops sharing.
 
 The current URL is stored in `logs/sharing.json`. It changes after stopping and starting a new tunnel. The email allowlist is in `logs/sharing-allowlist.json`, a local JSON list excluded from Git. Stop sharing before editing the list, then restart. The launcher refuses empty lists and wildcard domains, and refuses to start a tunnel if this client lacks email protection. It never falls back to an unauthenticated tunnel.
 

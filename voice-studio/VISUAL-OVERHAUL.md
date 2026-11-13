@@ -1,4 +1,4 @@
-# Historical: Line Please visual review
+# Historical: Alibi visual review
 
 Verified October 15, 2026 (America/New_York). Branch: `design/obsidian-acoustic-shell`.
 

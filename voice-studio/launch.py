@@ -1,4 +1,4 @@
-"""Portable foreground launcher for Voice Studio."""
+"""Portable foreground launcher for Alibi."""
 from __future__ import annotations
 
 import json
@@ -41,7 +41,7 @@ def main() -> None:
     for _ in range(60):
         if healthy():
             webbrowser.open("http://127.0.0.1:8765")
-            print("Voice Studio: http://127.0.0.1:8765")
+            print("Alibi: http://127.0.0.1:8765")
             return
         time.sleep(1)
     raise SystemExit("Studio did not become ready. Inspect logs/backend.log.")

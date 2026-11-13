@@ -1,10 +1,10 @@
-# Line Please
+# Alibi
 
-Line Please is a local voice workspace for recording, voice references,
+Alibi is a local voice workspace for recording, voice references,
 Qwen3-TTS cloning, synthetic voice design, non-destructive audio cleanup,
 multitrack arrangement, and WAV export.
 
-The product is named **Line Please**. The `voice-studio/` directory and the
+The product is named **Alibi**. The `voice-studio/` directory and the
 `Voice-Studio` launcher filenames are retained as implementation paths for
 compatibility; they do not represent the product name.
 
@@ -45,6 +45,16 @@ supported but can be substantially slower than GPU inference.
 
 Run the installer from the repository root.
 
+### One-click Windows installer
+
+Release builds include `AlibiSetup.exe`. Double-click it to install Alibi
+per-user under `%LOCALAPPDATA%\Alibi`; no Python, Node.js, Git, or
+FFmpeg installation is required. The installer downloads the CPU/CUDA runtime,
+Base model, tokenizer, and optionally VoiceDesign weights. Allow at least 20 GB
+of free space, or 24 GB when VoiceDesign is selected.
+
+Windows SmartScreen may warn because release builds are currently unsigned.
+
 ### Windows
 
 ```powershell
@@ -75,6 +85,17 @@ python voice-studio/install.py --skip-models
 
 The installer does not modify global AI settings or write personal audio into
 the repository outside the configured local data directories.
+
+To build the installer from source on Windows:
+
+```powershell
+.\installer\build.ps1
+```
+
+The build downloads the pinned Qwen3-TTS source, packages the application and
+production frontend into a single `dist\AlibiSetup.exe`, and writes a
+SHA-256 checksum beside it. Model weights are intentionally downloaded by the
+installer rather than embedded in the executable.
 
 ## Run
 
