@@ -1,10 +1,10 @@
-# Line Please
+# Alibi
 
-Line Please is a local voice workspace for recording, voice references,
-Qwen3-TTS cloning, synthetic voice design, non-destructive audio cleanup,
-multitrack arrangement, and WAV export.
+**Clone. Shape. Perform.**
 
-The product is named **Line Please**. The `voice-studio/` directory and the
+Alibi is a local voice production app for dialogue and narration. Clone your voice from a recording, design a new voice from a text description, and arrange multiple voices on a timeline. Clean up takes, export a mixed WAV, or add narration to a video.
+
+The product is named **Alibi**. The `voice-studio/` directory and the
 `Voice-Studio` launcher filenames are retained as implementation paths for
 compatibility; they do not represent the product name.
 
@@ -42,6 +42,8 @@ CUDA-enabled PyTorch; otherwise it installs CPU PyTorch. CPU inference is
 supported but can be substantially slower than GPU inference.
 
 ## Install
+
+The one-click Windows `.exe` installer is in development. The steps below cover the current source setup.
 
 Run the installer from the repository root.
 
