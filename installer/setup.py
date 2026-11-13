@@ -19,6 +19,7 @@ import zipfile
 
 
 APP_NAME = "Alibi"
+ICON_NAME = "Alibi.ico"
 PYTHON_VERSION = "3.12.10"
 PYTHON_RUNTIME_URL = f"https://www.nuget.org/api/v2/package/python/{PYTHON_VERSION}"
 FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
@@ -125,15 +126,20 @@ def extract_ffmpeg(archive: Path, target: Path, log) -> Path:
     return ffmpeg_dir
 
 
-def create_shortcut(path: Path, target: Path, arguments: str, working_directory: Path) -> None:
+def create_shortcut(path: Path, target: Path, arguments: str, working_directory: Path, icon: Path | None = None) -> None:
     def quote(value: str) -> str:
         return value.replace("'", "''")
     script = (
         "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('{path}');"
         "$s.TargetPath='{target}';$s.Arguments='{arguments}';"
-        "$s.WorkingDirectory='{working}';$s.Description='Alibi';$s.Save()"
-    ).format(path=quote(str(path)), target=quote(str(target)), arguments=quote(arguments), working=quote(str(working_directory)))
+        "$s.WorkingDirectory='{working}';$s.Description='Alibi';"
+        "$s.IconLocation='{icon}';$s.Save()"
+    ).format(path=quote(str(path)), target=quote(str(target)), arguments=quote(arguments), working=quote(str(working_directory)), icon=quote(shortcut_icon_argument(icon.parent) if icon else ""))
     subprocess.run(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script], check=True)
+
+
+def shortcut_icon_argument(install_root: Path) -> str:
+    return f"{install_root / ICON_NAME},0"
 
 
 def shortcut_targets(create_desktop: bool, start_menu: Path, desktop: Path | None) -> list[Path]:
@@ -203,8 +209,13 @@ def install(voice_design: bool, log, progress, create_desktop_shortcut: bool = T
     start_menu = Path(os.environ["APPDATA"]) / "Microsoft" / "Windows" / "Start Menu" / "Programs"
     desktop = Path(os.environ["USERPROFILE"]) / "Desktop"
     start_menu.mkdir(parents=True, exist_ok=True)
+    icon = root / ICON_NAME
+    icon_source = payload / "installer" / ICON_NAME
+    if not icon_source.exists():
+        raise RuntimeError("Installer payload is incomplete: shortcut icon was not found.")
+    shutil.copy2(icon_source, icon)
     for shortcut in shortcut_targets(create_desktop_shortcut, start_menu, desktop if desktop.exists() else None):
-        create_shortcut(shortcut, start_script, "", root)
+        create_shortcut(shortcut, start_script, "", root, icon)
     register_uninstall(f'"{runtime_dir / "python.exe"}" "{root / "uninstall.py"}"', root)
     log("Created Start Menu and Desktop shortcuts.")
     progress(1, 1)

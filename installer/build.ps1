@@ -42,6 +42,7 @@ if (!(Test-Path (Join-Path $vendor 'pyproject.toml'))) {
 $installerPayload = Join-Path $payload 'installer'
 New-Item $installerPayload -ItemType Directory -Force | Out-Null
 Copy-Item (Join-Path $PSScriptRoot 'uninstall.py') $installerPayload -Force
+Copy-Item (Join-Path $PSScriptRoot 'Alibi.ico') $installerPayload -Force
 if (!(Test-Path (Join-Path $source 'frontend\dist\index.html'))) {
   throw 'Production frontend is missing. Run npm --prefix voice-studio/frontend run build first.'
 }
@@ -50,6 +51,7 @@ Push-Location $root
 try {
   python -m PyInstaller --noconfirm --clean --onefile --windowed `
     --name AlibiSetup `
+    --icon installer\Alibi.ico `
     --add-data "$payload;payload" `
     installer\setup.py
 } finally {

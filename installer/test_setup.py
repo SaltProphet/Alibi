@@ -39,6 +39,11 @@ class SetupPlanningTests(unittest.TestCase):
         self.assertEqual(setup.shortcut_targets(True, start_menu, desktop), [start_menu / "Alibi.lnk", desktop / "Alibi.lnk"])
         self.assertEqual(setup.shortcut_targets(False, start_menu, desktop), [start_menu / "Alibi.lnk"])
 
+    def test_shortcut_icon_is_bundled_and_used(self):
+        self.assertEqual(setup.ICON_NAME, "Alibi.ico")
+        self.assertTrue((Path(setup.__file__).parent / setup.ICON_NAME).exists())
+        self.assertEqual(setup.shortcut_icon_argument(Path("C:/Users/Ada/Alibi")), "C:\\Users\\Ada\\Alibi\\Alibi.ico,0")
+
 
 if __name__ == "__main__":
     unittest.main()
