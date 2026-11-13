@@ -25,6 +25,14 @@ BASE_REPOS = ["Qwen/Qwen3-TTS-12Hz-1.7B-Base", "Qwen/Qwen3-TTS-Tokenizer-12Hz"]
 VOICE_DESIGN_REPO = "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign"
 
 
+def window_geometry() -> str:
+    return "760x620"
+
+
+def log_height() -> int:
+    return 9
+
+
 def install_directory(local_appdata: str | os.PathLike[str]) -> Path:
     return Path(local_appdata) / "Alibi"
 
@@ -179,35 +187,52 @@ class InstallerWindow:
         self.tk = tk
         self.root = tk.Tk()
         self.root.title("Alibi Setup")
-        self.root.geometry("650x470")
-        self.root.resizable(False, False)
+        self.root.geometry(window_geometry())
+        self.root.minsize(700, 560)
+        self.root.resizable(True, True)
         self.events: queue.Queue[tuple[str, object]] = queue.Queue()
         self.voice_design = tk.BooleanVar(value=False)
-        ttk.Label(self.root, text="Alibi", font=("Segoe UI", 22, "bold")).pack(anchor="w", padx=28, pady=(24, 2))
-        ttk.Label(self.root, text="One-click local voice workspace installer", font=("Segoe UI", 10)).pack(anchor="w", padx=30)
-        ttk.Checkbutton(self.root, text="Install VoiceDesign model too (adds about 4.2 GB)", variable=self.voice_design).pack(anchor="w", padx=30, pady=18)
+        ttk.Label(self.root, text="Alibi", font=("Segoe UI", 22, "bold")).pack(anchor="w", padx=30, pady=(24, 2))
+        ttk.Label(self.root, text="One-click local voice workspace installer", font=("Segoe UI", 10)).pack(anchor="w", padx=32)
+        ttk.Checkbutton(self.root, text="Install VoiceDesign model too (adds about 4.2 GB)", variable=self.voice_design).pack(anchor="w", padx=32, pady=18)
         self.status = ttk.Label(self.root, text="Ready to install")
-        self.status.pack(anchor="w", padx=30)
+        self.status.pack(anchor="w", padx=32)
         self.progress = ttk.Progressbar(self.root, mode="indeterminate")
-        self.progress.pack(fill="x", padx=30, pady=8)
-        self.log_text = tk.Text(self.root, height=15, width=78, state="disabled", background="#111827", foreground="#e5e7eb")
-        self.log_text.pack(padx=30, pady=(4, 12))
-        self.button = ttk.Button(self.root, text="Install Alibi", command=self.start)
-        self.button.pack(anchor="e", padx=30)
+        self.progress.pack(fill="x", padx=32, pady=(8, 12))
+        button_row = ttk.Frame(self.root)
+        button_row.pack(fill="x", padx=32, pady=(0, 10))
+        self.button = ttk.Button(button_row, text="Install Alibi", command=self.start, takefocus=True)
+        self.button.pack(side="right")
+        ttk.Label(button_row, text="Press Enter to start", foreground="#555555").pack(side="left")
+        log_frame = ttk.LabelFrame(self.root, text="Installation log")
+        log_frame.pack(fill="both", expand=True, padx=32, pady=(0, 24))
+        self.log_text = tk.Text(log_frame, height=log_height(), width=86, state="disabled", wrap="word",
+                                background="#ffffff", foreground="#202020", insertbackground="#202020",
+                                takefocus=True, relief="solid", borderwidth=1)
+        scrollbar = ttk.Scrollbar(log_frame, orient="vertical", command=self.log_text.yview)
+        self.log_text.configure(yscrollcommand=scrollbar.set)
+        self.log_text.pack(side="left", fill="both", expand=True, padx=(8, 0), pady=8)
+        scrollbar.pack(side="right", fill="y", padx=(0, 8), pady=8)
+        self.root.bind("<Return>", lambda _event: self.start() if str(self.button["state"]) == "normal" else None)
+        self.root.after(250, self.button.focus_set)
         self.root.after(100, self.poll)
 
     def write_log(self, text: str) -> None:
         self.events.put(("log", text))
 
     def start(self) -> None:
+        if str(self.button["state"]) != "normal" or self.button["text"] == "Close":
+            return
         self.button.configure(state="disabled")
+        self.status.configure(text="Preparing installation…")
         self.progress.configure(mode="indeterminate")
         self.progress.start(12)
-        threading.Thread(target=self.worker, daemon=True).start()
+        voice_design = bool(self.voice_design.get())
+        threading.Thread(target=self.worker, args=(voice_design,), daemon=True).start()
 
-    def worker(self) -> None:
+    def worker(self, voice_design: bool) -> None:
         try:
-            install(self.voice_design.get(), self.write_log, lambda done, total: None)
+            install(voice_design, self.write_log, lambda done, total: self.events.put(("progress", (done, total))))
             self.events.put(("done", None))
         except Exception as error:
             self.events.put(("error", str(error)))
@@ -221,15 +246,22 @@ class InstallerWindow:
                     self.log_text.insert("end", str(value) + "\n")
                     self.log_text.see("end")
                     self.log_text.configure(state="disabled")
+                elif kind == "progress":
+                    done, total = value
+                    if total:
+                        self.progress.stop()
+                        self.progress.configure(mode="determinate", maximum=total, value=done)
+                        self.status.configure(text=f"Downloading… {done // 1024**2} / {total // 1024**2} MB")
                 elif kind == "done":
                     self.progress.stop()
                     self.progress.configure(mode="determinate", value=100)
-                    self.status.configure(text="Installation complete. Launch from the shortcut.")
+                    self.status.configure(text="Installation complete. Launch Alibi from the shortcut.")
+                    self.button.configure(text="Close", state="normal", command=self.root.destroy)
                 elif kind == "error":
                     self.progress.stop()
                     self.status.configure(text="Installation failed")
                     self.write_log("ERROR: " + str(value))
-                    self.button.configure(state="normal")
+                    self.button.configure(text="Try again", state="normal", command=self.start)
         except queue.Empty:
             pass
         self.root.after(100, self.poll)

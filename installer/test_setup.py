@@ -20,6 +20,10 @@ class SetupPlanningTests(unittest.TestCase):
     def test_free_space_requirement_changes_for_voice_design(self):
         self.assertLess(setup.minimum_free_bytes(False), setup.minimum_free_bytes(True))
 
+    def test_installer_window_keeps_primary_action_visible(self):
+        self.assertEqual(setup.window_geometry(), "760x620")
+        self.assertLessEqual(setup.log_height(), 10)
+
 
 if __name__ == "__main__":
     unittest.main()
