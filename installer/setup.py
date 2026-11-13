@@ -136,6 +136,13 @@ def create_shortcut(path: Path, target: Path, arguments: str, working_directory:
     subprocess.run(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script], check=True)
 
 
+def shortcut_targets(create_desktop: bool, start_menu: Path, desktop: Path | None) -> list[Path]:
+    targets = [start_menu / "Alibi.lnk"]
+    if create_desktop and desktop is not None:
+        targets.append(desktop / "Alibi.lnk")
+    return targets
+
+
 def register_uninstall(uninstall_command: str, install_dir: Path) -> None:
     import winreg
     key_path = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Alibi"
@@ -147,7 +154,7 @@ def register_uninstall(uninstall_command: str, install_dir: Path) -> None:
         winreg.SetValueEx(key, "UninstallString", 0, winreg.REG_SZ, uninstall_command)
 
 
-def install(voice_design: bool, log, progress) -> None:
+def install(voice_design: bool, log, progress, create_desktop_shortcut: bool = True) -> None:
     local_appdata = os.environ.get("LOCALAPPDATA")
     if not local_appdata:
         raise RuntimeError("LOCALAPPDATA is unavailable; this installer requires Windows per-user storage.")
@@ -196,9 +203,8 @@ def install(voice_design: bool, log, progress) -> None:
     start_menu = Path(os.environ["APPDATA"]) / "Microsoft" / "Windows" / "Start Menu" / "Programs"
     desktop = Path(os.environ["USERPROFILE"]) / "Desktop"
     start_menu.mkdir(parents=True, exist_ok=True)
-    create_shortcut(start_menu / "Alibi.lnk", start_script, "", root)
-    if desktop.exists():
-        create_shortcut(desktop / "Alibi.lnk", start_script, "", root)
+    for shortcut in shortcut_targets(create_desktop_shortcut, start_menu, desktop if desktop.exists() else None):
+        create_shortcut(shortcut, start_script, "", root)
     register_uninstall(f'"{runtime_dir / "python.exe"}" "{root / "uninstall.py"}"', root)
     log("Created Start Menu and Desktop shortcuts.")
     progress(1, 1)
@@ -226,6 +232,7 @@ class InstallerWindow:
         style.configure("Card.Horizontal.TProgressbar", troughcolor=COLORS["brown"], background=COLORS["orange"], lightcolor=COLORS["orange"], darkcolor=COLORS["orange"])
         self.events: queue.Queue[tuple[str, object]] = queue.Queue()
         self.voice_design = tk.BooleanVar(value=False)
+        self.create_desktop_shortcut = tk.BooleanVar(value=True)
         self.hero = tk.Canvas(self.root, height=250, background=COLORS["ink"], highlightthickness=0)
         self.hero.pack(fill="x")
         self.hero.bind("<Configure>", self.draw_hero)
@@ -236,6 +243,7 @@ class InstallerWindow:
         ttk.Label(card, text="A private voice workspace, installed on this PC.", style="Card.TLabel", font=("Segoe UI", 13, "bold")).pack(anchor="w", pady=(3, 2))
         ttk.Label(card, text="Base model and tokenizer are included. VoiceDesign is optional.", style="Muted.Card.TLabel").pack(anchor="w")
         ttk.Checkbutton(card, text="Add VoiceDesign model (about 4.2 GB extra)", variable=self.voice_design, style="Card.TCheckbutton").pack(anchor="w", pady=(13, 8))
+        ttk.Checkbutton(card, text="Create a desktop shortcut", variable=self.create_desktop_shortcut, style="Card.TCheckbutton").pack(anchor="w", pady=(0, 8))
         self.status = ttk.Label(card, text="Ready to install", style="Card.TLabel")
         self.status.pack(anchor="w")
         self.progress = ttk.Progressbar(card, mode="indeterminate", style="Card.Horizontal.TProgressbar")
@@ -293,11 +301,12 @@ class InstallerWindow:
         self.progress.configure(mode="indeterminate")
         self.progress.start(12)
         voice_design = bool(self.voice_design.get())
-        threading.Thread(target=self.worker, args=(voice_design,), daemon=True).start()
+        create_desktop_shortcut = bool(self.create_desktop_shortcut.get())
+        threading.Thread(target=self.worker, args=(voice_design, create_desktop_shortcut), daemon=True).start()
 
-    def worker(self, voice_design: bool) -> None:
+    def worker(self, voice_design: bool, create_desktop_shortcut: bool) -> None:
         try:
-            install(voice_design, self.write_log, lambda done, total: self.events.put(("progress", (done, total))))
+            install(voice_design, self.write_log, lambda done, total: self.events.put(("progress", (done, total))), create_desktop_shortcut)
             self.events.put(("done", None))
         except Exception as error:
             self.events.put(("error", str(error)))

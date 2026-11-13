@@ -33,6 +33,12 @@ class SetupPlanningTests(unittest.TestCase):
     def test_python_runtime_uses_state_free_nuget_package(self):
         self.assertIn("nuget.org/api/v2/package/python/3.12.10", setup.PYTHON_RUNTIME_URL)
 
+    def test_shortcut_targets_always_include_start_menu_and_optionally_desktop(self):
+        start_menu = Path("C:/Start Menu")
+        desktop = Path("C:/Desktop")
+        self.assertEqual(setup.shortcut_targets(True, start_menu, desktop), [start_menu / "Alibi.lnk", desktop / "Alibi.lnk"])
+        self.assertEqual(setup.shortcut_targets(False, start_menu, desktop), [start_menu / "Alibi.lnk"])
+
 
 if __name__ == "__main__":
     unittest.main()
