@@ -42,14 +42,14 @@ supported but can be substantially slower than GPU inference.
 
 ## Install
 
-The one-click Windows `.exe` installer is included in release builds. The steps below also cover source setup.
+The one-click Windows `.exe` installer is published with GitHub Releases and is not stored in the repository. The steps below also cover source setup.
 
 Run the installer from the repository root.
 
 ### One-click Windows installer
 
-Release builds include `AlibiSetup.exe`. Double-click it to install Alibi
-per-user under `%LOCALAPPDATA%\Alibi`; no Python, Node.js, Git, or
+Download `AlibiSetup.exe` from the latest GitHub Release and double-click it to
+install Alibi per-user under `%LOCALAPPDATA%\Alibi`; no Python, Node.js, Git, or
 FFmpeg installation is required. The installer downloads the CPU/CUDA runtime,
 Base model, tokenizer, and optionally VoiceDesign weights. Allow at least 20 GB
 of free space, or 24 GB when VoiceDesign is selected.
@@ -96,7 +96,8 @@ To build the installer from source on Windows:
 The build downloads the pinned Qwen3-TTS source, packages the application and
 production frontend into a single `dist\AlibiSetup.exe`, and writes a
 SHA-256 checksum beside it. Model weights are intentionally downloaded by the
-installer rather than embedded in the executable.
+installer rather than embedded in the executable. Attach both build outputs to
+a GitHub Release instead of committing them.
 
 ## Run
 
@@ -191,7 +192,7 @@ recordings:
 | `voice-studio/logs/` | Local service and installation logs |
 | `installer/` | Windows installer builder and per-user setup |
 | `docs/` | Documentation index; `docs/archive/` holds historical records |
-| `dist/` | Published installer artifact and checksum |
+| `dist/` | Local installer build output; published through GitHub Releases, not committed |
 
 ## Privacy and safety
 

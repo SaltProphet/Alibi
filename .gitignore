@@ -11,6 +11,8 @@ node_modules/
 # Python and packaging build output
 build/
 *.spec
+dist/AlibiSetup.exe
+dist/*.sha256
 __pycache__/
 *.py[cod]
 
