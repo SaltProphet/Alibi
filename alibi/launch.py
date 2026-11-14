@@ -13,7 +13,7 @@ import webbrowser
 
 ROOT = Path(__file__).resolve().parent
 PYTHON = ROOT / (".venv/Scripts/python.exe" if sys.platform == "win32" else ".venv/bin/python")
-PID_FILE = ROOT / "logs/voice-studio-processes.json"
+PID_FILE = ROOT / "logs/alibi-processes.json"
 
 
 def healthy() -> bool:

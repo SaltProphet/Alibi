@@ -19,8 +19,8 @@ Remove-Item $build -Recurse -Force -ErrorAction SilentlyContinue
 New-Item $payload -ItemType Directory -Force | Out-Null
 New-Item $output -ItemType Directory -Force | Out-Null
 
-$source = Join-Path $payload 'voice-studio'
-Copy-Item (Join-Path $root 'voice-studio') $source -Recurse -Force
+$source = Join-Path $payload 'alibi'
+Copy-Item (Join-Path $root 'alibi') $source -Recurse -Force
 foreach ($relative in @('.venv', 'cache', 'data', 'logs', 'models', 'node_modules', 'frontend\node_modules', 'vendor')) {
   Remove-Item (Join-Path $source $relative) -Recurse -Force -ErrorAction SilentlyContinue
 }
@@ -44,7 +44,7 @@ New-Item $installerPayload -ItemType Directory -Force | Out-Null
 Copy-Item (Join-Path $PSScriptRoot 'uninstall.py') $installerPayload -Force
 Copy-Item (Join-Path $PSScriptRoot 'Alibi.ico') $installerPayload -Force
 if (!(Test-Path (Join-Path $source 'frontend\dist\index.html'))) {
-  throw 'Production frontend is missing. Run npm --prefix voice-studio/frontend run build first.'
+  throw 'Production frontend is missing. Run npm --prefix alibi/frontend run build first.'
 }
 
 Push-Location $root

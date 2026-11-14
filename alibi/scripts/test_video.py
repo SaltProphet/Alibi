@@ -3,7 +3,7 @@ import hashlib,json,os,sys,uuid,subprocess
 from pathlib import Path
 root=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(root))
-os.environ['VOICE_STUDIO_DATA']=str(root/'data/tests'/('video-contract-'+uuid.uuid4().hex))
+os.environ['ALIBI_DATA']=str(root/'data/tests'/('video-contract-'+uuid.uuid4().hex))
 import numpy as np
 import soundfile as sf
 from fastapi.testclient import TestClient

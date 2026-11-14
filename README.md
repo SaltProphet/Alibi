@@ -3,9 +3,6 @@
 **Clone. Shape. Perform.**
 
 Alibi is a local voice production app for dialogue and narration. Clone your voice from a recording, design a new voice from a text description, and arrange multiple voices on a timeline. Clean up takes, export a mixed WAV, or add narration to a video.
-The product is named **Alibi**. The `voice-studio/` directory and the
-`Voice-Studio` launcher filenames are retained as implementation paths for
-compatibility; they do not represent the product name.
 
 Everything runs on the host machine. The application does not require a paid
 API, cloud TTS key, Docker, or an account for normal local use.
@@ -59,18 +56,18 @@ Windows SmartScreen may warn because release builds are currently unsigned.
 ### Windows
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\voice-studio\Install-Voice-Studio.ps1 -VoiceDesign
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\alibi\Install-Alibi.ps1 -VoiceDesign
 ```
 
 ### macOS or Linux
 
 ```sh
-./voice-studio/install.sh --voice-design
+./alibi/install.sh --voice-design
 ```
 
 The installer:
 
-1. Creates `voice-studio/.venv`.
+1. Creates `alibi/.venv`.
 2. Checks out the pinned Qwen3-TTS source.
 3. Selects CPU or CUDA PyTorch packages.
 4. Installs the locked Python and frontend dependencies.
@@ -81,7 +78,7 @@ The installer:
 For a source-only install without model downloads:
 
 ```sh
-python voice-studio/install.py --skip-models
+python alibi/install.py --skip-models
 ```
 
 The installer does not modify global AI settings or write personal audio into
@@ -104,23 +101,23 @@ a GitHub Release instead of committing them.
 Start the local backend and inference worker:
 
 ```sh
-python voice-studio/launch.py
+python alibi/launch.py
 ```
 
 Windows also provides:
 
 ```text
-voice-studio\Launch-Voice-Studio.cmd
+alibi\Launch-Alibi.cmd
 ```
 
 macOS/Linux provide:
 
 ```sh
-./voice-studio/launch.sh
+./alibi/launch.sh
 ```
 
 Open `http://127.0.0.1:8765` if the launcher does not open a browser. Stop the
-services with `stop.py`, `stop.sh`, or `Stop-Voice-Studio.cmd` on Windows.
+services with `stop.py`, `stop.sh`, or `Stop-Alibi.cmd` on Windows.
 
 The first generation loads the local model and can take a while. Later
 generations reuse the loaded model. The backend and inference worker bind only
@@ -135,16 +132,16 @@ to loopback by default.
 5. Add selected takes to **Arrange**.
 6. Position clips, adjust tracks, save the session, and export a mixed WAV.
 
-For implementation notes and helper setup, see [AI-HELPERS.md](voice-studio/AI-HELPERS.md)
+For implementation notes and helper setup, see [AI-HELPERS.md](alibi/AI-HELPERS.md)
 and the [documentation index](docs/README.md). Historical verification records
 live under [docs/archive](docs/archive/).
 
 ## Development
 
-Frontend development runs from `voice-studio/frontend`:
+Frontend development runs from `alibi/frontend`:
 
 ```sh
-npm --prefix voice-studio/frontend ci
+npm --prefix alibi/frontend ci
 npm run dev
 ```
 
@@ -154,10 +151,10 @@ options, for example `npm run dev -- --host 127.0.0.1`.
 Rebuild the tracked production frontend with:
 
 ```sh
-npm --prefix voice-studio/frontend run build
+npm --prefix alibi/frontend run build
 ```
 
-Useful checks from `voice-studio/`:
+Useful checks from `alibi/`:
 
 ```sh
 python scripts/test_installer.py
@@ -173,7 +170,7 @@ API checks use an isolated test workspace so they do not target personal
 recordings:
 
 ```powershell
-.\Launch-Voice-Studio.ps1 -TestWorkspace -NoBrowser
+.\Launch-Alibi.ps1 -TestWorkspace -NoBrowser
 .\.venv\Scripts\python.exe .\scripts\test_api.py
 ```
 
@@ -181,15 +178,15 @@ recordings:
 
 | Path | Purpose |
 |---|---|
-| `voice-studio/frontend/` | React/Vite source and tracked production build |
-| `voice-studio/backend/` | Local FastAPI audio, profile, job, session, and export API |
-| `voice-studio/inference/` | Separate local Qwen inference worker |
-| `voice-studio/install.py` | Cross-platform installer |
-| `voice-studio/launch.py` | Cross-platform launcher |
-| `voice-studio/scripts/` | Setup, model, test, and maintenance scripts; see its README |
-| `voice-studio/models/` | Downloaded local model weights; not source-controlled |
-| `voice-studio/data/` | Local recordings, profiles, sessions, and exports |
-| `voice-studio/logs/` | Local service and installation logs |
+| `alibi/frontend/` | React/Vite source and tracked production build |
+| `alibi/backend/` | Local FastAPI audio, profile, job, session, and export API |
+| `alibi/inference/` | Separate local Qwen inference worker |
+| `alibi/install.py` | Cross-platform installer |
+| `alibi/launch.py` | Cross-platform launcher |
+| `alibi/scripts/` | Setup, model, test, and maintenance scripts; see its README |
+| `alibi/models/` | Downloaded local model weights; not source-controlled |
+| `alibi/data/` | Local recordings, profiles, sessions, and exports |
+| `alibi/logs/` | Local service and installation logs |
 | `installer/` | Windows installer builder and per-user setup |
 | `docs/` | Documentation index; `docs/archive/` holds historical records |
 | `dist/` | Local installer build output; published through GitHub Releases, not committed |

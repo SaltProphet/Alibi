@@ -3,10 +3,10 @@
 Active documentation lives next to the code it describes:
 
 - [`../README.md`](../README.md) — product overview, install, run, development, and repository layout.
-- [`../voice-studio/AI-HELPERS.md`](../voice-studio/AI-HELPERS.md) — local writing, transcription, and voice-design setup.
-- [`../voice-studio/SHARING.md`](../voice-studio/SHARING.md) — invited-guest demo sharing.
-- [`../voice-studio/scripts/README.md`](../voice-studio/scripts/README.md) — what each setup, test, and browser-verification script does.
-- [`../voice-studio/frontend/THIRD-PARTY-NOTICES.md`](../voice-studio/frontend/THIRD-PARTY-NOTICES.md) — bundled frontend dependencies.
+- [`../alibi/AI-HELPERS.md`](../alibi/AI-HELPERS.md) — local writing, transcription, and voice-design setup.
+- [`../alibi/SHARING.md`](../alibi/SHARING.md) — invited-guest demo sharing.
+- [`../alibi/scripts/README.md`](../alibi/scripts/README.md) — what each setup, test, and browser-verification script does.
+- [`../alibi/frontend/THIRD-PARTY-NOTICES.md`](../alibi/frontend/THIRD-PARTY-NOTICES.md) — bundled frontend dependencies.
 
 ## Archive
 

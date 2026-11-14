@@ -1,6 +1,6 @@
 from pathlib import Path
 import httpx,json
-r=Path('voice-studio');state=json.loads((r/'logs/sharing.json').read_text());url=state['url'];checks={}
+r=Path('alibi');state=json.loads((r/'logs/sharing.json').read_text());url=state['url'];checks={}
 with httpx.Client(timeout=30,trust_env=False,follow_redirects=False) as c:
  for path in ['/','/api/assets','/api/profiles','/api/sessions']:
   x=c.get(url+path);checks[path]={'status':x.status_code,'location':x.headers.get('location','')[:200],'content_type':x.headers.get('content-type')}

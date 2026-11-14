@@ -13,8 +13,8 @@ from pydantic import BaseModel,Field
 from .audio import process,mix
 from . import assist
 ROOT=Path(__file__).resolve().parents[1]
-DATA=Path(os.environ.get('VOICE_STUDIO_DATA',ROOT/'data')).resolve()
-WORKER=os.environ.get('VOICE_STUDIO_WORKER_URL','http://127.0.0.1:8766').rstrip('/')
+DATA=Path(os.environ.get('ALIBI_DATA',ROOT/'data')).resolve()
+WORKER=os.environ.get('ALIBI_WORKER_URL','http://127.0.0.1:8766').rstrip('/')
 for folder in ['originals','audio','references','profiles','sessions','exports','tests','folders']: (DATA/folder).mkdir(parents=True,exist_ok=True)
 app=FastAPI(title='Alibi'); app.add_middleware(TrustedHostMiddleware,allowed_hosts=['127.0.0.1','localhost','testserver'])
 pool=ThreadPoolExecutor(max_workers=1); jobs={}; guard=threading.Lock()
@@ -23,7 +23,7 @@ async def local_origin(request:Request,call_next):
     origin=request.headers.get('origin')
     allowed=['http://127.0.0.1:8765','http://localhost:8765','http://127.0.0.1:5178','http://localhost:5178']
     allowed.append(str(request.base_url).rstrip('/'))
-    if os.environ.get('VOICE_STUDIO_DEMO')=='1':
+    if os.environ.get('ALIBI_DEMO')=='1':
         allowed += ['http://127.0.0.1:8767','http://localhost:8767']
         config=ROOT/'logs/sharing.json'
         if config.exists():
@@ -58,7 +58,7 @@ async def value_error(request,exc): return JSONResponse({'detail':str(exc)},stat
 def health():
     try: worker=httpx.get(WORKER+'/health',timeout=2,trust_env=False).json()
     except Exception: worker={'status':'unavailable'}
-    if os.environ.get('VOICE_STUDIO_DEMO')=='1':
+    if os.environ.get('ALIBI_DEMO')=='1':
         return {'status':'ready','inference':worker,'demo':True,'notice':'Shared demo workspace: invited guests can see files saved here. Personal studio files are separate.'}
     return {'status':'ready','inference':worker,'data':str(DATA)}
 @app.get('/api/assets')
@@ -197,13 +197,13 @@ def export(s:Session):
     result={'id':id,'name':s.name,'duration':len(x)/sr,'gain':gain,'url':'/api/exports/'+id}; save('exports',result); return result
 @app.get('/api/exports/{id}')
 def download_export(id:str):
-    obj=load('exports',id); return FileResponse(DATA/'exports'/(key(id)+'.wav'),media_type='audio/wav',filename='Voice-Studio-Mix.wav')
+    obj=load('exports',id); return FileResponse(DATA/'exports'/(key(id)+'.wav'),media_type='audio/wav',filename='Alibi-Mix.wav')
 @app.get('/api/assist/capabilities')
 def assist_capabilities():
-    if os.environ.get('VOICE_STUDIO_DEMO')=='1': return {'enabled':False}
+    if os.environ.get('ALIBI_DEMO')=='1': return {'enabled':False}
     return {'enabled':True,'transcription':assist.asr_status(),
-            'writing_model':os.environ.get('VOICE_STUDIO_AI_MODEL','gpt-oss:20b'),
-            'voice_design':(Path(os.environ.get('VOICE_STUDIO_MODELS',ROOT/'models'))/'Qwen3-TTS-12Hz-1.7B-VoiceDesign/config.json').is_file()}
+            'writing_model':os.environ.get('ALIBI_AI_MODEL','gpt-oss:20b'),
+            'voice_design':(Path(os.environ.get('ALIBI_MODELS',ROOT/'models'))/'Qwen3-TTS-12Hz-1.7B-VoiceDesign/config.json').is_file()}
 
 def assist_job(fn):
     assist.require_private()

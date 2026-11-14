@@ -1,6 +1,6 @@
 # Scripts
 
-Run scripts from the `voice-studio/` directory with its virtual environment: `.venv/Scripts/python.exe scripts/<name>.py` on Windows or `.venv/bin/python scripts/<name>.py` on macOS/Linux. Browser scripts are Playwright code blocks run through `playwright-cli run-code --filename`.
+Run scripts from the `alibi/` directory with its virtual environment: `.venv/Scripts/python.exe scripts/<name>.py` on Windows or `.venv/bin/python scripts/<name>.py` on macOS/Linux. Browser scripts are Playwright code blocks run through `playwright-cli run-code --filename`.
 
 ## Runtime and setup
 
@@ -16,7 +16,7 @@ Run scripts from the `voice-studio/` directory with its virtual environment: `.v
 
 ## Automated tests
 
-These use isolated workspaces or temporary directories. `test_api.py` requires `Launch-Voice-Studio.ps1 -TestWorkspace -NoBrowser`; `test_demo_functional.py` requires the demo service on port 8767.
+These use isolated workspaces or temporary directories. `test_api.py` requires `Launch-Alibi.ps1 -TestWorkspace -NoBrowser`; `test_demo_functional.py` requires the demo service on port 8767.
 
 | Script | Covers |
 |---|---|

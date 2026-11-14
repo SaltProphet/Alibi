@@ -2,8 +2,8 @@
   "name": "alibi",
   "private": true,
   "scripts": {
-    "dev": "npm --prefix voice-studio/frontend run dev --",
-    "build": "npm --prefix voice-studio/frontend run build",
-    "preview": "npm --prefix voice-studio/frontend run preview"
+    "dev": "npm --prefix alibi/frontend run dev --",
+    "build": "npm --prefix alibi/frontend run build",
+    "preview": "npm --prefix alibi/frontend run preview"
   }
 }

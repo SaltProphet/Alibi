@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 test_root=Path(__file__).resolve().parents[1]/'data/tests'
 test_root.mkdir(parents=True,exist_ok=True)
-os.environ['VOICE_STUDIO_DATA']=str(test_root/('assist-contract-'+uuid.uuid4().hex))
+os.environ['ALIBI_DATA']=str(test_root/('assist-contract-'+uuid.uuid4().hex))
 import numpy as np,soundfile as sf
 from fastapi.testclient import TestClient
 from unittest.mock import patch
@@ -37,13 +37,13 @@ def test_assist():
     with patch.object(assist,'asr_status',return_value={'available':False,'reason':'Missing local model'}):
         assert done(c.post('/api/assets/'+id+'/transcribe',json={}))['error']=='Missing local model'
     assert c.post('/api/assist/draft',headers={'Origin':'https://example.com'},json={'text':'','instruction':'x'}).status_code==403
-    os.environ['VOICE_STUDIO_DEMO']='1'
+    os.environ['ALIBI_DEMO']='1'
     try:
         assert c.get('/api/assist/capabilities').json()=={'enabled':False}
         assert c.post('/api/assist/draft',json={'text':'','instruction':'x'}).status_code==403
         assert c.post('/api/assets/'+id+'/transcribe',json={}).status_code==403
         assert c.post('/api/assist/voice-design',json={'description':'warm','text':'hello'}).status_code==403
-    finally: os.environ.pop('VOICE_STUDIO_DEMO')
+    finally: os.environ.pop('ALIBI_DEMO')
     print('PASS: transcript provenance, immutable audio, draft validation, missing model, origin rejection, demo isolation')
 
 if __name__=='__main__': test_assist()

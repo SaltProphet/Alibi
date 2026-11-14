@@ -1,11 +1,11 @@
 # Local runtime, dependencies, models, and personal data
-voice-studio/.venv/
-voice-studio/vendor/
-voice-studio/models/
-voice-studio/cache/
-voice-studio/data/
-voice-studio/logs/
-voice-studio/frontend/node_modules/
+alibi/.venv/
+alibi/vendor/
+alibi/models/
+alibi/cache/
+alibi/data/
+alibi/logs/
+alibi/frontend/node_modules/
 node_modules/
 
 # Python and packaging build output

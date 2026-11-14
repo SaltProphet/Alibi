@@ -5,7 +5,7 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("voice_studio_installer", ROOT / "install.py")
+SPEC = importlib.util.spec_from_file_location("alibi_installer", ROOT / "install.py")
 installer = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(installer)
 

@@ -8,7 +8,7 @@ The normal Generate / Record & edit / Arrange & export workflow remains intact.
 
 ## Models and installation
 
-Writing uses the existing loopback Ollama service (`127.0.0.1:11434`) and defaults to `gpt-oss:20b`. Set `VOICE_STUDIO_AI_MODEL` before launching to select another already installed model. Missing service/model failures appear in the dialog; the studio never pulls Ollama models. The request uses `keep_alive: 0` to release the writing model after its reply. Drafting may take a minute or more on this machine.
+Writing uses the existing loopback Ollama service (`127.0.0.1:11434`) and defaults to `gpt-oss:20b`. Set `ALIBI_AI_MODEL` before launching to select another already installed model. Missing service/model failures appear in the dialog; the studio never pulls Ollama models. The request uses `keep_alive: 0` to release the writing model after its reply. Drafting may take a minute or more on this machine.
 
 Transcription uses faster-whisper 1.2.1 with **CPU int8**, four threads, automatic language detection and VAD. This avoids an additional GPU model. Install into the existing environment:
 
@@ -17,7 +17,7 @@ Transcription uses faster-whisper 1.2.1 with **CPU int8**, four threads, automat
 .\.venv\Scripts\hf.exe download Systran/faster-whisper-small --local-dir models/faster-whisper-small --include model.bin config.json tokenizer.json vocabulary.txt
 ```
 
-The small multilingual model needs roughly 0.5 GB of disk. `VOICE_STUDIO_ASR_MODEL` can point to another local CTranslate2 Whisper model directory. Model loading uses `local_files_only=True`; no model is downloaded by a transcription request. Nemotron/NeMo is not installed or integrated.
+The small multilingual model needs roughly 0.5 GB of disk. `ALIBI_ASR_MODEL` can point to another local CTranslate2 Whisper model directory. Model loading uses `local_files_only=True`; no model is downloaded by a transcription request. Nemotron/NeMo is not installed or integrated.
 
 Voice design uses the optional `models/Qwen3-TTS-12Hz-1.7B-VoiceDesign` model and the existing Qwen tokenizer. Fresh installs download Base and tokenizer weights by default; add `--voice-design` to `install.py` to download VoiceDesign weights. The worker holds one Qwen model at a time, unloading before switching Base ↔ VoiceDesign. Allow initial model loading time after a switch. Cloning continues to use Base and the exact reference transcript.
 
@@ -29,7 +29,7 @@ Writing suggestions, helper jobs and unsaved form values do not survive page rel
 
 All helpers are disabled in the shared demo, both in the UI and on the API. No public AI endpoint or tunnel is created. Personal audio/text stays on the PC; local model installation requires a one-time network download. Existing demo generation and workspace separation remain intact.
 
-For isolated verification only, `VOICE_STUDIO_WORKER_URL`, `VOICE_STUDIO_MODELS`, `VOICE_STUDIO_DATA`, and `HF_HOME` can override worker location, model storage and data/cache directories. Normal launch requires none of these. These are operator environment settings, never browser-supplied paths or URLs.
+For isolated verification only, `ALIBI_WORKER_URL`, `ALIBI_MODELS`, `ALIBI_DATA`, and `HF_HOME` can override worker location, model storage and data/cache directories. Normal launch requires none of these. These are operator environment settings, never browser-supplied paths or URLs.
 
 ## Verification
 

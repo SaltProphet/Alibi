@@ -173,9 +173,9 @@ def install(voice_design: bool, log, progress, create_desktop_shortcut: bool = T
     runtime_dir = root / "runtime"
     tools_dir = root / "tools"
     payload = payload_root()
-    source_app = payload / "voice-studio"
+    source_app = payload / "alibi"
     if not source_app.exists():
-        raise RuntimeError("Installer payload is incomplete: voice-studio was not found.")
+        raise RuntimeError("Installer payload is incomplete: alibi was not found.")
     root.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source_app, app_dir, dirs_exist_ok=True)
     log(f"Installed application files to {app_dir}.")
@@ -192,7 +192,7 @@ def install(voice_design: bool, log, progress, create_desktop_shortcut: bool = T
         ffmpeg_dir = extract_ffmpeg(ffmpeg_archive, tools_dir, log)
         env = os.environ.copy()
         env["PATH"] = str(ffmpeg_dir) + os.pathsep + env.get("PATH", "")
-        env["VOICE_STUDIO_DATA"] = str(root / "data")
+        env["ALIBI_DATA"] = str(root / "data")
         args = [str(python), "install.py", "--bundled"]
         if voice_design:
             args.append("--voice-design")

@@ -47,7 +47,7 @@ def run(args: list[str], *, cwd: Path = ROOT) -> None:
 
 
 def has_cuda() -> bool:
-    if os.environ.get("VOICE_STUDIO_CPU", "").lower() in {"1", "true", "yes"}:
+    if os.environ.get("ALIBI_CPU", "").lower() in {"1", "true", "yes"}:
         return False
     nvidia = command("nvidia-smi")
     if not nvidia:

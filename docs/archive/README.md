@@ -14,3 +14,5 @@ Historical records kept for provenance. None of these files describe the current
 | [`reference-design.html`](reference-design.html) | Original supplied design reference, preserved byte-for-byte. It is not imported by the build. |
 
 Related Git tags still exist for older checkpoints, including `checkpoint/before-unified-studio-20261015` and `checkpoint/before-focused-workspace-20261017`.
+
+These records predate the Alibi naming cleanup, so `voice-studio` paths and `VOICE_STUDIO_*` variables inside them are historical names, not current ones.

@@ -8,7 +8,7 @@ import signal
 
 
 ROOT = Path(__file__).resolve().parent
-PID_FILE = ROOT / "logs/voice-studio-processes.json"
+PID_FILE = ROOT / "logs/alibi-processes.json"
 
 
 def main() -> None:

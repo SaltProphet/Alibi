@@ -30,7 +30,7 @@ def load_model(kind):
     if cuda:
         free,_=torch.cuda.mem_get_info()
         if free<6*2**30: raise RuntimeError('Less than 6 GiB GPU memory is free. Free resources before generating.')
-    path=Path(os.environ.get('VOICE_STUDIO_MODELS',ROOT/'models'))/('Qwen3-TTS-12Hz-1.7B-'+kind)
+    path=Path(os.environ.get('ALIBI_MODELS',ROOT/'models'))/('Qwen3-TTS-12Hz-1.7B-'+kind)
     if not (path/'config.json').is_file(): raise RuntimeError('Local '+kind+' model is missing. See AI-HELPERS.md.')
     model=Qwen3TTSModel.from_pretrained(str(path),device_map=device,dtype=dtype,attn_implementation='sdpa',local_files_only=True)
     model_kind=kind

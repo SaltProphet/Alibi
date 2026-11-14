@@ -1,4 +1,4 @@
-"""Functional API checks; run only with Launch-Voice-Studio.ps1 -TestWorkspace."""
+"""Functional API checks; run only with Launch-Alibi.ps1 -TestWorkspace."""
 from pathlib import Path
 import httpx,json,subprocess,hashlib,time,sys
 import soundfile as sf

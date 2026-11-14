@@ -9,6 +9,6 @@ if sys.argv[1] == 'backend':
 elif sys.argv[1] == 'inference':
     uvicorn.run('inference.app:app', host='127.0.0.1', port=8766)
 elif sys.argv[1] == 'demo':
-    os.environ['VOICE_STUDIO_DATA'] = str(ROOT / 'data' / 'demo')
-    os.environ['VOICE_STUDIO_DEMO'] = '1'
+    os.environ['ALIBI_DATA'] = str(ROOT / 'data' / 'demo')
+    os.environ['ALIBI_DEMO'] = '1'
     uvicorn.run('backend.app:app', host='127.0.0.1', port=8767)
