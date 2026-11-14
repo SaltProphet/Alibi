@@ -1,4 +1,6 @@
-# Focused workspace — October 17, 2026
+# Historical: focused workspace - October 17, 2026
+
+> Archived historical record. It does not describe the current shipped build. See the repository `README.md` for current behavior.
 
 ## Checkpoint and delivery
 

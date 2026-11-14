@@ -1,6 +1,6 @@
 # Bundled frontend dependencies
 
-The archived supplied design reference remains at `src/immersive/reference.html` for provenance. It is not imported by the current build. The shipped frontend uses React, Vite, Inter, Lucide, and WaveSurfer.
+The archived supplied design reference remains at `docs/archive/reference-design.html` in the repository root for provenance. It is not imported by the current build. The shipped frontend uses React, Vite, Inter, Lucide, and WaveSurfer.
 
 Lucide (ISC) and Inter (SIL Open Font License) are bundled locally. Their notices are included under `public/licenses/` and copied into production output. React and WaveSurfer remain the app dependencies.
 

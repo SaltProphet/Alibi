@@ -1,4 +1,6 @@
-# Video workspace
+# Historical: video workspace
+
+> Archived historical record. It does not describe the current shipped build. See the repository `README.md` for current behavior.
 
 Video is a separate workspace beside Generate, Record & edit, and Arrange & export. Existing audio sessions and files retain their original formats and routes.
 

@@ -1,24 +1,30 @@
-.firecrawl/
+# Local runtime, dependencies, models, and personal data
 voice-studio/.venv/
+voice-studio/vendor/
 voice-studio/models/
 voice-studio/cache/
 voice-studio/data/
 voice-studio/logs/
-voice-studio/vendor/
 voice-studio/frontend/node_modules/
+node_modules/
+
+# Python and packaging build output
 build/
 *.spec
 __pycache__/
+*.py[cod]
+
+# Tooling caches
 .playwright-cli/
+
+# Secrets and environment overrides
 .env
 .env.*
 !.env.example
 *.pem
 *.key
-voice-studio/FINAL-REPORT.md
-voice-studio/INSTALLATION.md
-voice-studio/scripts/final_checks.py
-voice-studio/content/onboarding/earlier-*/
-voice-studio/backups/
-voice-studio/codex-file-preview-*/
-voice-studio/Voice-Studio-Integration.zip
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+desktop.ini

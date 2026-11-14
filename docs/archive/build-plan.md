@@ -1,4 +1,6 @@
-# Alibi Build Plan
+# Historical: Alibi build plan
+
+> Archived task plan. Most boxes were completed or superseded; use it only as a record of intent, not as current status.
 
 ## Current state
 

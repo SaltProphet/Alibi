@@ -134,9 +134,9 @@ to loopback by default.
 5. Add selected takes to **Arrange**.
 6. Position clips, adjust tracks, save the session, and export a mixed WAV.
 
-For implementation notes, helper setup, and historical verification records,
-see the focused documents under the legacy implementation directory
-`voice-studio/`.
+For implementation notes and helper setup, see [AI-HELPERS.md](voice-studio/AI-HELPERS.md)
+and the [documentation index](docs/README.md). Historical verification records
+live under [docs/archive](docs/archive/).
 
 ## Development
 
@@ -185,10 +185,13 @@ recordings:
 | `voice-studio/inference/` | Separate local Qwen inference worker |
 | `voice-studio/install.py` | Cross-platform installer |
 | `voice-studio/launch.py` | Cross-platform launcher |
-| `voice-studio/scripts/` | Setup, model, verification, and maintenance scripts |
+| `voice-studio/scripts/` | Setup, model, test, and maintenance scripts; see its README |
 | `voice-studio/models/` | Downloaded local model weights; not source-controlled |
 | `voice-studio/data/` | Local recordings, profiles, sessions, and exports |
 | `voice-studio/logs/` | Local service and installation logs |
+| `installer/` | Windows installer builder and per-user setup |
+| `docs/` | Documentation index; `docs/archive/` holds historical records |
+| `dist/` | Published installer artifact and checksum |
 
 ## Privacy and safety
 
