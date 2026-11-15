@@ -20,9 +20,13 @@ New-Item $payload -ItemType Directory -Force | Out-Null
 New-Item $output -ItemType Directory -Force | Out-Null
 
 $source = Join-Path $payload 'alibi'
-Copy-Item (Join-Path $root 'alibi') $source -Recurse -Force
+# Copy the application without runtime, model, data, or dependency directories.
+# Excluding them during the copy avoids silent Remove-Item failures on locked paths.
+$excluded = @('.venv', 'cache', 'data', 'logs', 'models', 'node_modules', 'vendor')
+robocopy (Join-Path $root 'alibi') $source /E /XD @excluded /NFL /NDL /NJH /NJS /NP | Out-Null
+if ($LASTEXITCODE -ge 8) { throw "Copying the application payload failed (robocopy exit code $LASTEXITCODE)." }
 foreach ($relative in @('.venv', 'cache', 'data', 'logs', 'models', 'node_modules', 'frontend\node_modules', 'vendor')) {
-  Remove-Item (Join-Path $source $relative) -Recurse -Force -ErrorAction SilentlyContinue
+  if (Test-Path (Join-Path $source $relative)) { throw "The application payload unexpectedly contains $relative." }
 }
 
 $vendor = Join-Path $source 'vendor\Qwen3-TTS'
