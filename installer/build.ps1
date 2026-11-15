@@ -46,6 +46,17 @@ Copy-Item (Join-Path $PSScriptRoot 'Alibi.ico') $installerPayload -Force
 if (!(Test-Path (Join-Path $source 'frontend\dist\index.html'))) {
   throw 'Production frontend is missing. Run npm --prefix alibi/frontend run build first.'
 }
+$buildInfo = Join-Path $source 'build-info.json'
+if (!(Test-Path $buildInfo)) {
+  throw 'Build stamp is missing. Run npm --prefix alibi/frontend run build first; it writes alibi/build-info.json.'
+}
+$version = (Get-Content $buildInfo -Raw | ConvertFrom-Json).version
+$commit = (Get-Content $buildInfo -Raw | ConvertFrom-Json).commit
+$head = (& git -C $root rev-parse HEAD 2>$null)
+if ($head -and $commit -ne $head) {
+  Write-Warning "Build stamp is from $commit but HEAD is $head. Rebuild the frontend before publishing."
+}
+Write-Host "Packaging Alibi $version ($commit)."
 
 Push-Location $root
 try {

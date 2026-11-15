@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+import tempfile
 import unittest
 
 
@@ -43,6 +44,28 @@ class SetupPlanningTests(unittest.TestCase):
         self.assertEqual(setup.ICON_NAME, "Alibi.ico")
         self.assertTrue((Path(setup.__file__).parent / setup.ICON_NAME).exists())
         self.assertEqual(setup.shortcut_icon_argument(Path("C:/Users/Ada/Alibi")), "C:\\Users\\Ada\\Alibi\\Alibi.ico,0")
+
+    def test_installer_version_is_read_from_the_packaged_build_stamp(self):
+        with tempfile.TemporaryDirectory() as raw:
+            payload = Path(raw)
+            app = payload / "alibi"
+            app.mkdir()
+            (app / "build-info.json").write_text('{"version": "0.2.0"}', encoding="utf-8")
+            original = setup.payload_root
+            setup.payload_root = lambda: payload
+            try:
+                self.assertEqual(setup.installer_version(), "0.2.0")
+            finally:
+                setup.payload_root = original
+
+    def test_installer_version_falls_back_when_the_stamp_is_missing(self):
+        with tempfile.TemporaryDirectory() as raw:
+            original = setup.payload_root
+            setup.payload_root = lambda: Path(raw)
+            try:
+                self.assertEqual(setup.installer_version(), "0.0.0")
+            finally:
+                setup.payload_root = original
 
 
 if __name__ == "__main__":

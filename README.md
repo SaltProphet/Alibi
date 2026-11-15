@@ -136,6 +136,58 @@ For implementation notes and helper setup, see [AI-HELPERS.md](alibi/AI-HELPERS.
 and the [documentation index](docs/README.md). Historical verification records
 live under [docs/archive](docs/archive/).
 
+## Versions and builds
+
+`version.json` in the repository root is the only version number to edit. It
+uses [SemVer](https://semver.org/): `0.x` while the app is still changing shape,
+`1.0.0` once Settings, model management, and the installer are stable.
+
+- Bug fix: bump `PATCH`. New capability: bump `MINOR`. Breaking change
+  (paths, environment variables, data format): bump `MINOR` under `0.x`, or
+  `MAJOR` from `1.0.0`.
+- Builds write `alibi/build-info.json` with the version, Git commit, whether the
+  tree was dirty, and the build time. That file ships with the installer so an
+  installed copy can identify itself without Git. It is generated, not edited.
+- `GET /api/health` reports the running build, and the sidebar shows the version
+  under **Settings**, with the short commit beneath it. A `*` after the commit
+  means the running copy has uncommitted changes.
+- `installer/setup.py` reads the same stamp for the Windows uninstall entry and
+  the setup window title.
+
+To see whether the checkout, GitHub, the built frontend, and the running app all
+agree, run:
+
+```powershell
+.\Check-AlibiVersion.ps1
+```
+
+The script fetches `origin`, then prints one row per layer with a match or stale
+verdict, and exits `0` when everything matches, `1` when something is stale, or
+`2` when the answer is inconclusive (app not running). Add `-Offline` to skip
+the fetch.
+
+Release flow:
+
+```powershell
+# 1. Bump version.json, rebuild the frontend, and commit both
+npm --prefix alibi/frontend run build
+git add -A
+git commit -m "Release v0.2.0"
+
+# 2. Rebuild so the build stamp names the release commit
+npm --prefix alibi/frontend run build
+
+# 3. Tag and push
+git tag v0.2.0
+git push origin main --tags
+
+# 4. Build the installer and attach it to a GitHub Release
+.\installer\build.ps1
+```
+
+`git describe --tags --always --dirty` still gives the exact commit for any
+checkout, for example `v0.2.0-3-g5f2847b-dirty`.
+
 ## Development
 
 Frontend development runs from `alibi/frontend`:
@@ -158,6 +210,7 @@ Useful checks from `alibi/`:
 
 ```sh
 python scripts/test_installer.py
+python scripts/test_buildinfo.py
 python -m py_compile install.py launch.py stop.py
 .venv/Scripts/python.exe scripts/test_dsp.py       # Windows
 .venv/Scripts/python.exe scripts/test_assist.py    # Windows
@@ -188,6 +241,8 @@ recordings:
 | `alibi/data/` | Local recordings, profiles, sessions, and exports |
 | `alibi/logs/` | Local service and installation logs |
 | `installer/` | Windows installer builder and per-user setup |
+| `version.json` | Single hand-edited version number |
+| `Check-AlibiVersion.ps1` | Verdict comparing checkout, GitHub, build stamp, and running app |
 | `docs/` | Documentation index; `docs/archive/` holds historical records |
 | `dist/` | Local installer build output; published through GitHub Releases, not committed |
 

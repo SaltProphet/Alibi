@@ -16,6 +16,9 @@ dist/*.sha256
 __pycache__/
 *.py[cod]
 
+# Generated at build time from version.json and Git; never hand-edited
+alibi/build-info.json
+
 # Tooling caches
 .playwright-cli/
 

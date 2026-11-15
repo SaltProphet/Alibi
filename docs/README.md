@@ -2,7 +2,9 @@
 
 Active documentation lives next to the code it describes:
 
-- [`../README.md`](../README.md) — product overview, install, run, development, and repository layout.
+- [`../README.md`](../README.md) - product overview, install, run, versioning, development, and repository layout.
+- [`../Check-AlibiVersion.ps1`](../Check-AlibiVersion.ps1) - compares the checkout, GitHub, the build stamp, and the running app.
+- [`../version.json`](../version.json) - the single version number; see "Versions and builds" in the README.
 - [`../alibi/AI-HELPERS.md`](../alibi/AI-HELPERS.md) — local writing, transcription, and voice-design setup.
 - [`../alibi/SHARING.md`](../alibi/SHARING.md) — invited-guest demo sharing.
 - [`../alibi/scripts/README.md`](../alibi/scripts/README.md) — what each setup, test, and browser-verification script does.

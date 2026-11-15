@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import json
 import queue
 import random
 import shutil
@@ -63,9 +64,23 @@ def payload_root() -> Path:
     return root / "payload"
 
 
+def installer_version() -> str:
+    """Read the version stamped into the packaged application payload."""
+    app = payload_root() / "alibi"
+    for candidate in (app / "build-info.json", app / "version.json"):
+        try:
+            data = json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        value = data.get("version") if isinstance(data, dict) else None
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return "0.0.0"
+
+
 def download(url: str, destination: Path, progress) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
-    request = urllib.request.Request(url, headers={"User-Agent": "AlibiSetup/1.0"})
+    request = urllib.request.Request(url, headers={"User-Agent": f"AlibiSetup/{installer_version()}"})
     with urllib.request.urlopen(request, timeout=60) as response, destination.open("wb") as output:
         total = int(response.headers.get("Content-Length", "0"))
         completed = 0
@@ -154,7 +169,7 @@ def register_uninstall(uninstall_command: str, install_dir: Path) -> None:
     key_path = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Alibi"
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, key_path) as key:
         winreg.SetValueEx(key, "DisplayName", 0, winreg.REG_SZ, APP_NAME)
-        winreg.SetValueEx(key, "DisplayVersion", 0, winreg.REG_SZ, "1.0.0")
+        winreg.SetValueEx(key, "DisplayVersion", 0, winreg.REG_SZ, installer_version())
         winreg.SetValueEx(key, "Publisher", 0, winreg.REG_SZ, "Alibi")
         winreg.SetValueEx(key, "InstallLocation", 0, winreg.REG_SZ, str(install_dir))
         winreg.SetValueEx(key, "UninstallString", 0, winreg.REG_SZ, uninstall_command)
@@ -227,7 +242,7 @@ class InstallerWindow:
         from tkinter import ttk
         self.tk = tk
         self.root = tk.Tk()
-        self.root.title("Alibi Setup")
+        self.root.title(f"Alibi Setup {installer_version()}")
         self.root.geometry(window_geometry())
         self.root.minsize(700, 560)
         self.root.resizable(True, True)

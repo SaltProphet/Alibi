@@ -12,6 +12,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from pydantic import BaseModel,Field
 from .audio import process,mix
 from . import assist
+from buildinfo import build_info
 ROOT=Path(__file__).resolve().parents[1]
 DATA=Path(os.environ.get('ALIBI_DATA',ROOT/'data')).resolve()
 WORKER=os.environ.get('ALIBI_WORKER_URL','http://127.0.0.1:8766').rstrip('/')
@@ -58,9 +59,12 @@ async def value_error(request,exc): return JSONResponse({'detail':str(exc)},stat
 def health():
     try: worker=httpx.get(WORKER+'/health',timeout=2,trust_env=False).json()
     except Exception: worker={'status':'unavailable'}
+    result={'status':'ready','inference':worker,'build':build_info()}
     if os.environ.get('ALIBI_DEMO')=='1':
-        return {'status':'ready','inference':worker,'demo':True,'notice':'Shared demo workspace: invited guests can see files saved here. Personal studio files are separate.'}
-    return {'status':'ready','inference':worker,'data':str(DATA)}
+        result.update(demo=True,notice='Shared demo workspace: invited guests can see files saved here. Personal studio files are separate.')
+    else:
+        result['data']=str(DATA)
+    return result
 @app.get('/api/assets')
 def assets(): return entries('audio')
 @app.get('/api/folders')

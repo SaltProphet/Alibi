@@ -6,7 +6,7 @@ body::before { display: none; }
 .vs-app button, .vs-app select, .vs-app input, .vs-app textarea { font-family: inherit; }
 
 /* Sidebar */
-.vs-side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; gap: var(--vs-space-6); padding: var(--vs-space-16) var(--vs-space-8); background: var(--vs-bg-rail); border-right: 1px solid var(--vs-border); z-index: 20; box-sizing: border-box; }
+.vs-side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; gap: var(--vs-space-6); padding: var(--vs-space-16) var(--vs-space-8); background: var(--vs-bg-rail); border-right: 1px solid var(--vs-border); z-index: 20; box-sizing: border-box; overflow-y: auto; scrollbar-width: thin; }
 .vs-logo { width: 40px; height: 40px; min-height: 40px; padding: 0; display: grid; place-items: center; border: 0; border-radius: 11px; background: var(--vs-accent); color: var(--vs-on-accent); margin-bottom: var(--vs-space-8); }
 .vs-logo:hover:not(:disabled) { background: var(--vs-accent-hover); border: 0; }
 .vs-side-links { display: flex; flex-direction: column; gap: var(--vs-space-6); width: 100%; }
@@ -25,6 +25,17 @@ body::before { display: none; }
 .vs-model.offline b { color: #ff8b8e; }
 .vs-settings-wrap { display: block; width: 100%; }
 .vs-settings:disabled { opacity: .5; cursor: not-allowed; }
+.vs-version { display: flex; flex-direction: column; align-items: center; gap: 1px; width: 100%; padding: 2px; color: var(--vs-text-3); font-family: var(--vs-font-mono); font-size: var(--vs-fs-overline); font-weight: var(--vs-fw-medium); line-height: 1.35; text-align: center; user-select: text; }
+.vs-version span { color: var(--vs-text-2); }
+.vs-version small { color: var(--vs-text-3); font-size: var(--vs-fs-overline); }
+
+/* Keep the footer, including the version badge, on screen in short windows. */
+@media (max-height: 720px) {
+  .vs-side { padding: var(--vs-space-10) var(--vs-space-8); gap: var(--vs-space-4); }
+  .vs-logo { margin-bottom: var(--vs-space-4); }
+  .vs-side-links button, .vs-settings { min-height: 46px; padding: 6px 2px; gap: 3px; }
+  .vs-model { padding: 6px 2px; }
+}
 
 /* Main column */
 .vs-app .vs-main { grid-column: 2; min-width: 0; max-width: none; margin: 0; padding: 40px 48px calc(var(--vs-player-height) + 24px); }
