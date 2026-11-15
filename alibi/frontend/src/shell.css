@@ -25,6 +25,9 @@ body::before { display: none; }
 .vs-model.offline b { color: #ff8b8e; }
 .vs-settings-wrap { display: block; width: 100%; }
 .vs-settings:disabled { opacity: .5; cursor: not-allowed; }
+.vs-settings:hover:not(:disabled) { background: var(--vs-surface-1); color: var(--vs-text-1); }
+.vs-settings.active { background: var(--vs-accent-tint); color: var(--vs-text-1); font-weight: var(--vs-fw-semibold); }
+.vs-settings.active svg { color: var(--vs-accent); }
 .vs-version { display: flex; flex-direction: column; align-items: center; gap: 1px; width: 100%; padding: 2px; color: var(--vs-text-3); font-family: var(--vs-font-mono); font-size: var(--vs-fs-overline); font-weight: var(--vs-fw-medium); line-height: 1.35; text-align: center; user-select: text; }
 .vs-version span { color: var(--vs-text-2); }
 .vs-version small { color: var(--vs-text-3); font-size: var(--vs-fs-overline); }
@@ -99,4 +102,18 @@ body::before { display: none; }
   .vs-panel { display: none; }
   .vs-app .vs-main { padding: 28px 24px calc(var(--vs-player-height) + 20px); }
   .vs-track, .vs-now { display: none; }
+}
+
+/* Compact rail: opt-in narrower navigation for short windows. */
+.compact-sidebar { --vs-rail-width: 66px; }
+.compact-sidebar .vs-side { padding-left: var(--vs-space-4); padding-right: var(--vs-space-4); }
+.compact-sidebar .vs-side-links button, .compact-sidebar .vs-settings { min-height: 46px; font-size: 9px; }
+
+/* Reduce motion: keep the layout, drop the decorative drift and transitions. */
+.reduce-motion::before { animation: none !important; }
+@media (prefers-reduced-motion: no-preference) {
+  .reduce-motion *, .reduce-motion *::before, .reduce-motion *::after {
+    animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important; scroll-behavior: auto !important;
+  }
 }

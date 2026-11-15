@@ -26,6 +26,7 @@ These use isolated workspaces or temporary directories. `test_api.py` requires `
 | `test_video.py` | Video media contracts using real FFmpeg. |
 | `test_installer.py` | Installer platform and runtime-selection helpers. |
 | `test_buildinfo.py` | Version and build-stamp resolution for checkouts and installed copies. |
+| `test_settings.py` | Settings validation, storage accounting, export cleanup, idle unload, and log tailing. |
 | `test_onboarding.py` | Packaged walkthrough and sample-profile integrity. |
 | `test_demo_functional.py` | Demo workspace isolation from personal data. |
 | `test_sharing.py` | Live sharing checks; run from the repository root while the demo tunnel is active. |

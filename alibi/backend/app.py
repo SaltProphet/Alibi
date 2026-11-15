@@ -1,6 +1,6 @@
 """Alibi API; all original inputs are immutable and each edit creates a derivative."""
 from pathlib import Path
-import json,uuid,shutil,subprocess,os,time,threading
+import json,uuid,shutil,subprocess,os,time,threading,sys,socket
 from concurrent.futures import ThreadPoolExecutor
 import soundfile as sf
 import numpy as np
@@ -12,6 +12,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from pydantic import BaseModel,Field
 from .audio import process,mix
 from . import assist
+from . import settings_store as store
 from buildinfo import build_info
 ROOT=Path(__file__).resolve().parents[1]
 DATA=Path(os.environ.get('ALIBI_DATA',ROOT/'data')).resolve()
@@ -65,6 +66,111 @@ def health():
     else:
         result['data']=str(DATA)
     return result
+def worker_json(path:str,payload:dict|None=None,timeout:float=10):
+    try:
+        with httpx.Client(timeout=timeout,trust_env=False) as client:
+            result=client.post(WORKER+path,json=payload) if payload is not None else client.get(WORKER+path)
+    except httpx.HTTPError as e:
+        raise HTTPException(503,'The inference worker is unavailable: '+str(e))
+    if not result.is_success:
+        try: detail=result.json().get('detail',result.text)
+        except ValueError: detail=result.text
+        raise HTTPException(503 if result.status_code>=500 else result.status_code,detail)
+    return result.json()
+
+def models_root(): return Path(os.environ.get('ALIBI_MODELS',ROOT/'models'))
+
+def folder_targets():
+    return {'data':DATA,'models':models_root(),'cache':models_root().parent/'cache',
+            'exports':DATA/'exports','logs':ROOT/'logs'}
+
+@app.get('/api/settings')
+def settings(): return {'settings':store.read(DATA),'languages':store.LANGUAGES,'models':list(store.MODELS)}
+
+@app.patch('/api/settings')
+def update_settings(patch:dict): return {'settings':store.write(DATA,patch)}
+
+@app.post('/api/settings/reset')
+def reset_settings(): return {'settings':store.reset(DATA)}
+
+@app.get('/api/settings/storage')
+def storage(): return store.storage_report(DATA,models_root())
+
+@app.post('/api/settings/cleanup')
+def cleanup_storage(payload:dict):
+    return store.cleanup_exports(DATA,payload.get('days',30))
+
+@app.post('/api/settings/reveal')
+def reveal_folder(payload:dict):
+    name=str(payload.get('name',''))
+    targets=folder_targets()
+    if name not in targets: raise HTTPException(400,'Unknown folder.')
+    path=targets[name]; path.mkdir(parents=True,exist_ok=True)
+    try:
+        if os.name=='nt': os.startfile(str(path))
+        elif sys.platform=='darwin': subprocess.Popen(['open',str(path)])
+        else: subprocess.Popen(['xdg-open',str(path)])
+    except OSError as e: raise HTTPException(503,'Could not open the folder: '+str(e))
+    return {'opened':str(path)}
+
+@app.get('/api/settings/logs')
+def service_logs(service:str='backend',lines:int=120):
+    if service not in ('backend','inference'): raise HTTPException(400,'Unknown service.')
+    path=ROOT/'logs'/(service+'.log')
+    return {'service':service,'path':str(path),'text':store.tail(path,max(10,min(400,lines)))}
+
+@app.get('/api/models')
+def models():
+    try: return {'available':True,**worker_json('/models',timeout=5)}
+    except HTTPException as e: return {'available':False,'error':str(e.detail),'models':[]}
+
+@app.post('/api/models/load')
+def load_model(payload:dict):
+    kind=str(payload.get('kind',''))
+    if kind not in store.MODELS: raise HTTPException(400,'Unknown model.')
+    return worker_json('/models/load',{'kind':kind},timeout=600)
+
+@app.post('/api/models/unload')
+def unload_model(): return worker_json('/models/unload',{},timeout=60)
+
+@app.post('/api/settings/restart-inference')
+def restart_inference():
+    try: httpx.post(WORKER+'/admin/shutdown',timeout=5,trust_env=False)
+    except httpx.HTTPError: pass
+    for _ in range(60):
+        time.sleep(.25)
+        if not port_open(): break
+    if port_open(): raise HTTPException(503,'The inference worker did not stop. Close Alibi and start it again.')
+    logdir=ROOT/'logs'; logdir.mkdir(parents=True,exist_ok=True)
+    flags=0
+    if os.name=='nt': flags=getattr(subprocess,'CREATE_NO_WINDOW',0)|getattr(subprocess,'CREATE_NEW_PROCESS_GROUP',0)
+    with (logdir/'inference.log').open('a',encoding='utf-8') as log:
+        subprocess.Popen([sys.executable,'scripts/run_server.py','inference'],cwd=ROOT,
+                         stdout=log,stderr=subprocess.STDOUT,creationflags=flags)
+    return {'status':'restarting','url':WORKER}
+
+def port_open(port:int=8766) -> bool:
+    try:
+        with socket.create_connection(('127.0.0.1',port),timeout=.3): return True
+    except OSError: return False
+
+def worker_watch():
+    """Apply startup preload and idle unload without touching the request path."""
+    started=False
+    while True:
+        try:
+            values=store.read(DATA)
+            health=worker_json('/health',timeout=3)
+            if not started:
+                started=True
+                if values['preload_model'] and not health.get('loaded'):
+                    worker_json('/models/load',{'kind':values['preload_model']},timeout=900)
+            if health.get('loaded') and store.should_unload(time.time(),health.get('last_used'),values['idle_unload_minutes']):
+                worker_json('/models/unload',{},timeout=60)
+        except Exception: pass
+        time.sleep(30)
+threading.Thread(target=worker_watch,daemon=True).start()
+
 @app.get('/api/assets')
 def assets(): return entries('audio')
 @app.get('/api/folders')

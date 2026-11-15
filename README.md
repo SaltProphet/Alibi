@@ -20,6 +20,8 @@ The shipped frontend opens in **Generate** and provides these workspaces:
   workspace.
 - **Arrange** — place clips on tracks, mix them, save sessions, and export WAV.
 - **Video** — create narrated video exports from local media.
+- **Settings** — load or unload models, watch GPU memory, restart the inference
+  worker, inspect storage and logs, and set defaults for new work.
 
 Visual mode and its Three.js/Tailwind runtime are not included in the shipped
 build.
@@ -145,7 +147,8 @@ live under [docs/archive](docs/archive/).
 
 `version.json` in the repository root is the only version number to edit. It
 uses [SemVer](https://semver.org/): `0.x` while the app is still changing shape,
-`1.0.0` once Settings, model management, and the installer are stable.
+`1.0.0` once the dedicated Transcribe workspace and the remaining placeholders
+are replaced.
 
 - Bug fix: bump `PATCH`. New capability: bump `MINOR`. Breaking change
   (paths, environment variables, data format): bump `MINOR` under `0.x`, or
@@ -154,8 +157,8 @@ uses [SemVer](https://semver.org/): `0.x` while the app is still changing shape,
   tree was dirty, and the build time. That file ships with the installer so an
   installed copy can identify itself without Git. It is generated, not edited.
 - `GET /api/health` reports the running build, and the sidebar shows the version
-  under **Settings**, with the short commit beneath it. A `*` after the commit
-  means the running copy has uncommitted changes.
+  above the **Settings** button, with the short commit beneath it. A `*` after
+  the commit means the running copy has uncommitted changes.
 - `installer/setup.py` reads the same stamp for the Windows uninstall entry and
   the setup window title.
 

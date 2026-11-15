@@ -34,7 +34,7 @@ export function SideNav({view,onNavigate,health}){
   <nav className="vs-side-links">{NAV.map(([key,text,icon])=><button key={key} className={view===key?'active':''} aria-current={view===key?'page':undefined} onClick={()=>onNavigate(key)}><Icon icon={icon}/><span>{text}</span></button>)}</nav>
   <div className="vs-side-foot">
    <div className={'vs-model '+state} role="status" title={state==='ready'?'Inference worker ready'+(health?.inference?.model?' ('+health.inference.model+' model)':''):state==='offline'?'Inference worker unavailable':'Checking inference worker'}><span className="vs-model-row"><i/><Icon icon={Cpu} size={14}/></span><span>Models</span><b>{label}</b></div>
-   <span className="vs-settings-wrap" title="Settings: coming soon"><button className="vs-settings" disabled aria-disabled="true"><Icon icon={Settings}/><span>Settings</span></button></span>
+   <span className="vs-settings-wrap"><button className={'vs-settings'+(view==='settings'?' active':'')} aria-current={view==='settings'?'page':undefined} onClick={()=>onNavigate('settings')}><Icon icon={Settings}/><span>Settings</span></button></span>
    <div className="vs-version" title={detail} aria-label={detail}><span>{version}</span>{commit&&<small>{commit}{build.dirty?'*':''}</small>}</div>
   </div>
  </aside>;
