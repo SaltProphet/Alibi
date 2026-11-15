@@ -16,7 +16,7 @@
 [CmdletBinding()]
 param(
   [switch]$Offline,
-  [string]$Url = 'http://127.0.0.1:8765'
+  [string]$Url
 )
 
 $ErrorActionPreference = 'Stop'
@@ -65,10 +65,21 @@ if (Test-Path $stampPath) {
 
 $running = $null
 $health = $null
-try {
-  $health = Invoke-RestMethod -Uri ($Url.TrimEnd('/') + '/api/health') -TimeoutSec 3
-  $running = $health.build
-} catch {}
+$reachable = $null
+# The launcher avoids ports that other programs already own, so look on the
+# whole range it can use instead of assuming 8765.
+$candidates = if ($Url) { @($Url) } else { 8765..8790 | ForEach-Object { "http://127.0.0.1:$_" } }
+foreach ($candidate in $candidates) {
+  try {
+    $result = Invoke-RestMethod -Uri ($candidate.TrimEnd('/') + '/api/health') -TimeoutSec 2
+    if ($result.status -eq 'ready') {
+      $health = $result
+      $reachable = $candidate.TrimEnd('/')
+      $running = $result.build
+      break
+    }
+  } catch {}
+}
 
 $problems = 0
 $unknown = 0
@@ -116,7 +127,7 @@ if (!$stamp) {
 
 if (!$health) {
   $unknown++
-  Write-Row 'Running app' ("{0} not reachable" -f $Url) 'start Alibi to check' 'Yellow'
+  Write-Row 'Running app' 'no Alibi instance on 8765-8790' 'start Alibi to check' 'Yellow'
 } elseif (!$running) {
   $problems++
   $hints += 'Running app predates version reporting -> reinstall Alibi'

@@ -123,8 +123,9 @@ macOS/Linux provide:
 ./alibi/launch.sh
 ```
 
-Open `http://127.0.0.1:8765` if the launcher does not open a browser. Stop the
-services with `stop.py`, `stop.sh`, or `Stop-Alibi.cmd` on Windows.
+Open the URL the launcher prints (it starts at `http://127.0.0.1:8765` and moves
+to the next free port if another program already owns it). Stop the services
+with `stop.py`, `stop.sh`, or `Stop-Alibi.cmd` on Windows.
 
 The first generation loads the local model and can take a while. Later
 generations reuse the loaded model. The backend and inference worker bind only
