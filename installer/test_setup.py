@@ -67,6 +67,19 @@ class SetupPlanningTests(unittest.TestCase):
             finally:
                 setup.payload_root = original
 
+    def test_help_and_unknown_options_exit_without_installing(self):
+        self.assertEqual(setup.main(["--help"]), 0)
+        self.assertEqual(setup.main(["--bogus"]), 2)
+
+    def test_unattended_install_writes_a_log_under_the_install_root(self):
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            log = setup.unattended_log(root, "start")
+            log("hello")
+            text = (root / "install.log").read_text(encoding="utf-8")
+            self.assertIn("start", text)
+            self.assertIn("hello", text)
+
 
 if __name__ == "__main__":
     unittest.main()

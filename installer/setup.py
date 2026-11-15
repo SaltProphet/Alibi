@@ -370,5 +370,55 @@ class InstallerWindow:
         self.root.mainloop()
 
 
+def unattended_log(root: Path, header: str):
+    """Return a logger that writes to the install log and to stdout."""
+    log_path = root / "install.log"
+
+    def write(message: str) -> None:
+        try:
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            with log_path.open("a", encoding="utf-8") as handle:
+                handle.write(str(message) + "\n")
+        except OSError:
+            pass
+
+    write(header)
+    return write
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Run the graphical installer, or an unattended install with --silent."""
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    known = {"--silent", "--voice-design", "--no-desktop-shortcut", "--help", "-h"}
+    unknown = [argument for argument in arguments if argument not in known]
+    if unknown:
+        print(f"Unknown option: {unknown[0]}", file=sys.stderr)
+        return 2
+    if {"--help", "-h"} & set(arguments):
+        print("Alibi Setup\n\n  --silent               install without a window\n"
+              "  --voice-design         also install the VoiceDesign model\n"
+              "  --no-desktop-shortcut  skip the desktop shortcut\n")
+        return 0
+    silent = "--silent" in arguments
+    if not silent:
+        InstallerWindow().run()
+        return 0
+
+    root = install_directory(os.environ.get("LOCALAPPDATA", ""))
+    log = unattended_log(root, f"Alibi Setup {installer_version()} unattended install")
+    try:
+        install(
+            voice_design="--voice-design" in arguments,
+            log=log,
+            progress=lambda done, total: None,
+            create_desktop_shortcut="--no-desktop-shortcut" not in arguments,
+        )
+    except Exception as error:
+        log(f"INSTALL FAILED: {error}")
+        return 1
+    log("INSTALL COMPLETE")
+    return 0
+
+
 if __name__ == "__main__":
-    InstallerWindow().run()
+    sys.exit(main())

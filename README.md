@@ -53,6 +53,11 @@ of free space, or 24 GB when VoiceDesign is selected.
 
 Windows SmartScreen may warn because release builds are currently unsigned.
 
+For unattended installs, run the same executable with `--silent` (add
+`--voice-design` or `--no-desktop-shortcut` as needed). It writes progress to
+`%LOCALAPPDATA%\Alibi\install.log` and exits non-zero on failure. This is the
+path the release check uses to verify a build end to end.
+
 ### Windows
 
 ```powershell
